@@ -21,6 +21,6 @@ export const Link = styled(RLink)`
   color: #818181;
   display: block;
   &:hover {
-    color: #f1f1f1;
+    color: #b0aeae;
   }
 `;

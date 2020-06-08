@@ -26,7 +26,7 @@ const SignUp = () => {
       })
         .catch((error) => {
           //console.clear();
-          setFatalError("Something went wrong, try again later!");
+          setFatalError("Incorrect username or password!");
         })
         .then((resp) => {
           if (resp) console.log(resp.data);

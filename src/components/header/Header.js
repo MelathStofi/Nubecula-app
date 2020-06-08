@@ -22,7 +22,7 @@ const Header = (props) => {
           </TitleImage>
         </Link>
         <div>
-          <Link to="/sign-in">sign in</Link>
+          <Link to="/sign-in">log in</Link>
           <Link to="/sign-up">sign up</Link>
 
           <button>
