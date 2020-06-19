@@ -4,14 +4,15 @@ import { Link as RLink } from "react-router-dom";
 
 export const NubeculaSideBar = styled.div`
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 15%; /* Set the width of the sidebar */
+  width: 15rem; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 1; /* Stay at the top */
+  z-index: 0; /* Stay on top */
+  top: 7rem; /* Stay at the top */
   left: 0;
   background-color: #eff6f3;
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
+  padding-left: 20px;
 `;
 
 export const Link = styled(RLink)`

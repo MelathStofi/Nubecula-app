@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+
+import FileList from "./FileList";
 
 const Drive = () => {
   const driveUrl = process.env.REACT_APP_BASE_URL;
   const [files, setFiles] = useState([]);
+  const fileInput = useRef(null);
+
+  const handleOnChange = (props) => {
+    const currFiles = [];
+    for (let i = 0; i < props.length; i++) {
+      currFiles.push(props[i]);
+    }
+    setFiles(currFiles);
+  };
 
   const upload = () => {
+    fileInput.current.value = "";
     const data = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -24,6 +37,7 @@ const Drive = () => {
       })
       .then((resp) => {
         setFiles([]);
+        console.log(files);
         if (resp) console.log(resp.data);
       });
   };
@@ -31,7 +45,11 @@ const Drive = () => {
   return (
     <div>
       <table>
-        <thead>+</thead>
+        <thead>
+          <tr>
+            <td>+</td>
+          </tr>
+        </thead>
         <tbody>
           <tr>
             <td>File to upload:</td>
@@ -39,9 +57,9 @@ const Drive = () => {
               <input
                 type="file"
                 name="fileinput"
-                webkitdirectory
                 multiple
-                onChange={(e) => setFiles(e.target.files)}
+                onChange={(e) => handleOnChange(e.target.files)}
+                ref={fileInput}
               />
             </td>
           </tr>
@@ -52,6 +70,14 @@ const Drive = () => {
             </td>
           </tr>
         </tbody>
+      </table>
+      <ul>
+        {files.map((file) => (
+          <li key={uuidv4()}>{file["name"]}</li>
+        ))}
+      </ul>
+      <table>
+        <FileList />
       </table>
     </div>
   );

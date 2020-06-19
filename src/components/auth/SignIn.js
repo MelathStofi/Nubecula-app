@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../../contexts/UserContext";
 
 const SignUp = () => {
   const signInUrl = process.env.REACT_APP_SIGN_IN_URL;
+  const history = useHistory();
+  const { setUsername, setRoles } = useContext(UserContext);
 
-  const [username, setUsername] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
 
   const [incorrectUsername, setIncorrectUsername] = useState("");
@@ -14,7 +18,7 @@ const SignUp = () => {
   const register = () => {
     if (inputCheck()) {
       const signInBody = {
-        username: username,
+        username: usernameInput,
         password: password,
       };
 
@@ -29,7 +33,11 @@ const SignUp = () => {
           setFatalError("Incorrect username or password!");
         })
         .then((resp) => {
-          if (resp) console.log(resp.data);
+          if (resp) {
+            setUsername(resp.data.username);
+            setRoles(resp.data.roles);
+            history.push("/drive");
+          }
         });
     }
   };
@@ -38,7 +46,7 @@ const SignUp = () => {
     let result = true;
     setIncorrectUsername("");
     setIncorrectPassword("");
-    if (username === "") {
+    if (usernameInput === "") {
       setIncorrectUsername("Must be filled!");
       result = false;
     }
@@ -56,7 +64,7 @@ const SignUp = () => {
           type="text"
           name="username"
           placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsernameInput(e.target.value)}
         />
         {incorrectUsername}
       </div>
