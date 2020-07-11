@@ -1,12 +1,14 @@
-import React, { useState, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useRef, useContext, useState } from "react";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { FilesContext } from "../../contexts/FilesContext";
 
-import FileList from "./FileList";
+import { XIcon } from "./styles/FileManagerStyle";
 
-const Drive = () => {
-  const driveUrl = process.env.REACT_APP_BASE_URL;
-  const [files, setFiles] = useState([]);
+const Upload = () => {
+  const fileManagerUrl = process.env.REACT_APP_BASE_URL;
+  const [uploadFiles, setUploadFiles] = useState([]);
+  const { setFiles } = useContext(FilesContext);
   const fileInput = useRef(null);
 
   const handleOnChange = (props) => {
@@ -14,20 +16,20 @@ const Drive = () => {
     for (let i = 0; i < props.length; i++) {
       currFiles.push(props[i]);
     }
-    setFiles(currFiles);
+    setUploadFiles(currFiles);
   };
 
   const upload = () => {
     fileInput.current.value = "";
     const data = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
-      data.append("files", files[i]);
+    for (let i = 0; i < uploadFiles.length; i++) {
+      data.append("files", uploadFiles[i]);
     }
 
     axios({
       method: "post",
-      url: driveUrl,
+      url: fileManagerUrl,
       data: data,
       withCredentials: true,
     })
@@ -36,9 +38,10 @@ const Drive = () => {
         console.log("You cannot upload file");
       })
       .then((resp) => {
-        setFiles([]);
-        console.log(files);
-        if (resp) console.log(resp.data);
+        if (resp) {
+          console.log(resp.data);
+          setUploadFiles([]);
+        }
       });
   };
 
@@ -72,15 +75,15 @@ const Drive = () => {
         </tbody>
       </table>
       <ul>
-        {files.map((file) => (
-          <li key={uuidv4()}>{file["name"]}</li>
+        {uploadFiles.map((file) => (
+          <li key={uuidv4()}>
+            {file["name"]}&nbsp;
+            <XIcon />
+          </li>
         ))}
       </ul>
-      <table>
-        <FileList />
-      </table>
     </div>
   );
 };
 
-export default Drive;
+export default Upload;

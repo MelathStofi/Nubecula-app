@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   NubeculaHeader,
   Link,
@@ -13,12 +13,29 @@ import TitleIMG from "./resources/title.png";
 import SignInIMG from "./resources/sign_in.png";
 import SignUpIMG from "./resources/sign_up.png";
 import LogoutIMG from "./resources/log_out.png";
-import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 
 const Header = (props) => {
   console.log(ShowWindowDimensions());
-  const { username, setUsername, setRoles } = useContext(UserContext);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: process.env.REACT_APP_USER_URL,
+      withCredentials: true,
+    })
+      .catch((error) => {
+        setLoading(false);
+      })
+      .then((resp) => {
+        setLoading(false);
+        if (resp) {
+          setUser(resp.data);
+        }
+      });
+  }, [setUser, setLoading]);
 
   const signOut = () => {
     axios({
@@ -27,20 +44,22 @@ const Header = (props) => {
       withCredentials: true,
     }).then((resp) => {
       if (resp) {
-        setUsername(null);
-        setRoles(null);
+        setUser(null);
       }
     });
-    console.log("username: ", username);
+    console.log("username: ", user);
   };
 
+  if (loading) {
+    return <div>loading...</div>;
+  }
   return (
     <NubeculaHeader>
       <TextContainer>
         <Link to="/">
           <img width="160px" height="50px" src={TitleIMG} alt="Title" />
         </Link>
-        {!username ? (
+        {!user ? (
           <React.Fragment>
             <SignIn to="/sign-in">
               <img width="60px" height="30px" src={SignInIMG} alt="Title" />

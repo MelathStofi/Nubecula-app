@@ -36,7 +36,7 @@ const SignUp = () => {
           if (resp) {
             setUsername(resp.data.username);
             setRoles(resp.data.roles);
-            history.push("/drive");
+            history.push("/file-manager");
           }
         });
     }
