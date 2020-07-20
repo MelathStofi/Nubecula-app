@@ -1,0 +1,51 @@
+.toolbar {
+  height: 4rem;
+  padding-left: 20px;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.fm-title {
+  height: 3.5rem;
+  font-size: 200%;
+  padding-top: 1.5rem;
+  padding-left: 20px;
+  border-bottom: 1px solid #cccccc;
+}
+
+.upload.container {
+}
+
+.file-input-wrapper {
+  padding-right: 10px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  top: 2px;
+}
+
+.toolbar-btn {
+  width: 8.3rem;
+  cursor: pointer;
+  border: 2px solid #9dc8b5;
+  color: white;
+  background-color: #9dc8b5;
+  padding: 5px 10px;
+  border-radius: 100px;
+  font-size: 90%;
+  font-weight: 600;
+}
+
+.toolbar-btn:focus {
+  outline: none !important;
+}
+
+.file-input-wrapper input[type="file"] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}

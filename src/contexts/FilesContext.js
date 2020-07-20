@@ -14,6 +14,7 @@ export const FilesProvider = (props) => {
       url: url,
       withCredentials: true,
     }).then((resp) => {
+      console.log("ájdí: ", id);
       if (resp) {
         setFiles(resp.data);
         history.push({
@@ -21,7 +22,6 @@ export const FilesProvider = (props) => {
           search: "?id=" + id,
         });
       }
-      console.log(resp.data);
     });
   };
 

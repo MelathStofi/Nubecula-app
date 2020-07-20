@@ -1,18 +1,15 @@
-import React, { useRef, useCallback } from "react";
-import { ContextMenu } from "react-contextmenu";
+import React, { useRef } from "react";
+import ContextMenu from "../contextmenu/ContextMenu.jsx";
 
-const FileManagerContainer = ({ children }) => {
+//import "./styles/FMContainerStyle.css";
+
+const FileManagerContainer = ({ children, id, menuItems }) => {
   const containerRef = useRef(null);
-
-  const myRef = useCallback((node) => {
-    if (node !== null) {
-    }
-  }, []);
 
   return (
     <div className="file-manager-container" ref={containerRef}>
       {children}
-      <ContextMenu parentRef={containerRef} />
+      <ContextMenu parentRef={containerRef} id={id} items={menuItems} />
     </div>
   );
 };

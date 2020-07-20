@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   NubeculaHeader,
-  Link,
+  TitleLink,
   TextContainer,
   SignIn,
   SignUpAndOut,
 } from "./styles/HeaderStyle";
-import ShowWindowDimensions from "../WindowDimension";
 
 //import OptionsImage from "./resources/options.png";
-import TitleIMG from "./resources/title.png";
-import SignInIMG from "./resources/sign_in.png";
-import SignUpIMG from "./resources/sign_up.png";
-import LogoutIMG from "./resources/log_out.png";
+import TitleIMG from "../../resources/title.png";
+import SignInIMG from "../../resources/sign_in.png";
+import SignUpIMG from "../../resources/sign_up.png";
+import LogoutIMG from "../../resources/log_out.png";
 import axios from "axios";
+import { UserContext } from "../../contexts/UserContext";
+import { useLocation } from "react-router-dom";
+import { useLoading } from "../../contexts/Loading";
 
 const Header = (props) => {
-  console.log(ShowWindowDimensions());
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const { loading, setLoading } = useLoading();
+  const { user, setUser } = useContext(UserContext);
+  const location = useLocation();
 
   useEffect(() => {
     axios({
@@ -30,7 +32,6 @@ const Header = (props) => {
         setLoading(false);
       })
       .then((resp) => {
-        setLoading(false);
         if (resp) {
           setUser(resp.data);
         }
@@ -45,32 +46,34 @@ const Header = (props) => {
     }).then((resp) => {
       if (resp) {
         setUser(null);
+        window.location.reload();
       }
     });
-    console.log("username: ", user);
   };
 
   if (loading) {
-    return <div>loading...</div>;
+    return null;
   }
   return (
     <NubeculaHeader>
       <TextContainer>
-        <Link to="/">
-          <img width="160px" height="50px" src={TitleIMG} alt="Title" />
-        </Link>
+        <TitleLink to="/">
+          <img width="120px" height="35px" src={TitleIMG} alt="Nubecula" />
+        </TitleLink>
         {!user ? (
           <React.Fragment>
-            <SignIn to="/sign-in">
-              <img width="60px" height="30px" src={SignInIMG} alt="Title" />
+            <SignIn to={{ pathname: "/sign-in", prevPath: location.pathname }}>
+              <img width="55px" height="29px" src={SignInIMG} alt="sign in" />
             </SignIn>
-            <SignUpAndOut to="/sign-up">
-              <img width="67px" height="30px" src={SignUpIMG} alt="Title" />
+            <SignUpAndOut
+              to={{ pathname: "/sign-up", prevPath: location.pathname }}
+            >
+              <img width="62px" height="30px" src={SignUpIMG} alt="sign up" />
             </SignUpAndOut>
           </React.Fragment>
         ) : (
-          <SignUpAndOut to="/" onClick={() => signOut()}>
-            <img width="60px" height="30px" src={LogoutIMG} alt="Title" />
+          <SignUpAndOut to="/file-manager" onClick={() => signOut()}>
+            <img width="60px" height="30px" src={LogoutIMG} alt="log out" />
           </SignUpAndOut>
         )}
       </TextContainer>

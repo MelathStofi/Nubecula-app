@@ -1,17 +1,35 @@
-.custom-context {
-  border: solid 1px #ccc;
-  display: inline-block;
-  margin: 5px;
-  background: #fff;
-  color: #000;
-  font-family: sans-serif;
+@keyframes appearing {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.context-menu {
+  animation: 0.3s ease-out 0s 1 appearing;
+  position: fixed;
+  width: 200px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  box-shadow: 0 0 10px 0px #818181;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.context-menu .context-menu__item {
+  padding: 4px 30px;
+}
+
+.context-menu .context-menu__item:not(:first-child) {
+  border-top: 1px solid #deede6;
+}
+
+.context-menu .context-menu__item:hover {
+  background-color: #deede6;
   cursor: pointer;
-  font-size: 12px;
 }
-.custom-context-item {
-  border-bottom: dotted 1px #ccc;
-  padding: 5px 25px;
-}
-.custom-context-item-last {
-  padding: 5px 25px;
+
+#c-m-open {
 }
