@@ -149,8 +149,13 @@ export const FileManagerProvider = (props) => {
     setIsAddDir(false);
   };
 
+  const FileDownload = require("js-file-download");
+
   const download = () => {
-    sendData("get", process.env.REACT_APP_FILES_URL + "/" + currentFile.id);
+    const filename = currentFile.filename + "." + currentFile.extension;
+    sendData("get", currentFile.url).then((resp) => {
+      FileDownload(resp, filename);
+    });
   };
 
   return (

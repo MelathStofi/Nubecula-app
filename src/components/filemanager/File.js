@@ -196,7 +196,7 @@ const File = (props) => {
         }
       >
         <span className="size cell-span">
-          {props.file.size ? props.file.size : " "}
+          {!props.file.directory ? props.file.size : " "}
         </span>
       </div>
       <div
