@@ -15,7 +15,7 @@ export const FileManagerProvider = (props) => {
   const { loadFiles, files, setFiles } = useContext(FilesContext);
   const [name, setName] = useState("");
   const [isAddDir, setIsAddDir] = useState(false);
-  const [isUpload, setIsUpload] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
   const location = useLocation();
 
   const sendData = async (method, url, data) => {
@@ -94,34 +94,34 @@ export const FileManagerProvider = (props) => {
   };
 
   const remove = () => {
+    const deletedFiles = selectedFiles.slice();
+    let filesClone = files.slice();
+    for (let deletedFile of deletedFiles) {
+      filesClone = filesClone.filter((file) => deletedFile.id !== file.id);
+    }
+    setFiles(filesClone);
     try {
-      const resp = sendData(
-        "delete",
-        process.env.REACT_APP_BASE_URL + "/" + currentFile.id,
-        null
-      );
-      if (resp) setFiles(files.filter((file) => currentFile.id !== file.id));
+      deletedFiles.map(async (file) => {
+        await sendData(
+          "delete",
+          process.env.REACT_APP_BASE_URL + "/" + file["id"],
+          null
+        );
+      });
     } catch {
       console.log("nem joló");
     }
   };
 
   const share = (fileId = currentFile.id) => {
+    const index = files.indexOf(currentFile);
+    let newFile = Object.assign({}, files[index]);
+    newFile["shared"] = !currentFile.shared;
+    let newArray = [...files];
+    newArray[index] = newFile;
+    setFiles(newArray);
     try {
-      sendData(
-        "put",
-        process.env.REACT_APP_SHARE_URL + "/" + fileId,
-        null
-      ).then((resp) => {
-        if (resp) {
-          const index = files.indexOf(currentFile);
-          let newFile = Object.assign({}, files[index]);
-          newFile["shared"] = !currentFile.shared;
-          let newArray = [...files];
-          newArray[index] = newFile;
-          setFiles(newArray);
-        }
-      });
+      sendData("put", process.env.REACT_APP_SHARE_URL + "/" + fileId, null);
     } catch {
       console.log("nem joló");
     }
@@ -150,7 +150,6 @@ export const FileManagerProvider = (props) => {
   };
 
   const FileDownload = require("js-file-download");
-
   const download = () => {
     const filename = currentFile.filename + "." + currentFile.extension;
     sendData("get", currentFile.url).then((resp) => {
@@ -183,8 +182,8 @@ export const FileManagerProvider = (props) => {
         isAddDir: isAddDir,
         setIsAddDir: setIsAddDir,
         download: download,
-        isUpload: isUpload,
-        setIsUpload: setIsUpload,
+        showUpload: showUpload,
+        setShowUpload: setShowUpload,
       }}
     >
       {props.children}

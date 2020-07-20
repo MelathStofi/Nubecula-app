@@ -3,7 +3,7 @@ import axios from "axios";
 import Upload from "../upload/Upload";
 
 import FileList from "./FileList";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import { useLoading, LoadingScreen } from "../../contexts/Loading";
 
 import "./styles/FileManagerStyle.css";
@@ -16,6 +16,7 @@ const FileManager = (props) => {
   const { loading, setLoading } = useLoading();
   const [user, setUser] = useState(null);
   const location = useLocation();
+  const history = useHistory();
   const {
     openFile,
     currentFile,
@@ -29,8 +30,8 @@ const FileManager = (props) => {
     share,
     addFolder,
     download,
-    isUpload,
-    setIsUpload,
+    showUpload,
+    setShowUpload,
   } = useContext(FMContext);
   const { currentMenu, setOptionClicked } = useContext(ContextMenuContext);
 
@@ -50,9 +51,9 @@ const FileManager = (props) => {
           setUser(resp.data);
         }
       });
-  }, [setCurrentFile, setUser, setLoading]);
+  }, [setCurrentFile, setUser, setLoading, history]);
 
-  const giveContext = () => {
+  const giveContextMenu = () => {
     const contextMenuItems = [];
     if (currentMenu === "file-contextmenu") {
       if (currentFile["directory"]) {
@@ -191,12 +192,12 @@ const FileManager = (props) => {
     <div id="user-fm">
       <FileManagerContainer
         id="file-manager-operations"
-        menuItems={giveContext()}
+        menuItems={giveContextMenu()}
       >
         <div className="fm-title">File Manager</div>
         <div className="toolbar">
           <div style={{ paddingRight: "10px" }}>
-            <button className="toolbar-btn" onClick={() => setIsUpload(true)}>
+            <button className="toolbar-btn" onClick={() => setShowUpload(true)}>
               Upload files
             </button>
           </div>
@@ -204,7 +205,7 @@ const FileManager = (props) => {
             Create Folder
           </button>
         </div>
-        {isUpload ? <Upload /> : null}
+        {showUpload ? <Upload /> : null}
         <FileList />
       </FileManagerContainer>
     </div>

@@ -38,14 +38,10 @@
   font-weight: 600;
 }
 
-.toolbar-btn:focus {
-  outline: none !important;
+.toolbar-btn:hover {
+  background-color: #8bb1a0;
 }
 
-.file-input-wrapper input[type="file"] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
+.toolbar-btn:focus {
+  outline: none !important;
 }

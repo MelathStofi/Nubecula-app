@@ -42,7 +42,7 @@ export const LoadingScreen = () => {
               type="rotate"
               from="0 64 64"
               to="180 64 64"
-              dur="720ms"
+              dur="500ms"
               repeatCount="indefinite"
             ></animateTransform>
           </g>

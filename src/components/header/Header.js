@@ -1,25 +1,20 @@
 import React, { useEffect, useContext } from "react";
-import {
-  NubeculaHeader,
-  TitleLink,
-  TextContainer,
-  SignIn,
-  SignUpAndOut,
-} from "./styles/HeaderStyle";
-
-//import OptionsImage from "./resources/options.png";
 import TitleIMG from "../../resources/title.png";
 import SignInIMG from "../../resources/sign_in.png";
 import SignUpIMG from "../../resources/sign_up.png";
 import LogoutIMG from "../../resources/log_out.png";
 import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useLoading } from "../../contexts/Loading";
+import { AppOptionsContext } from "../../contexts/AppOptionsContext";
+
+import "./styles/HeaderStyle.css";
 
 const Header = (props) => {
   const { loading, setLoading } = useLoading();
   const { user, setUser } = useContext(UserContext);
+  const { showAppOptions, setShowAppOptions } = useContext(AppOptionsContext);
   const location = useLocation();
 
   useEffect(() => {
@@ -38,46 +33,39 @@ const Header = (props) => {
       });
   }, [setUser, setLoading]);
 
-  const signOut = () => {
-    axios({
-      method: "post",
-      url: process.env.REACT_APP_SIGN_OUT_URL,
-      withCredentials: true,
-    }).then((resp) => {
-      if (resp) {
-        setUser(null);
-        window.location.reload();
-      }
-    });
-  };
-
   if (loading) {
     return null;
   }
   return (
-    <NubeculaHeader>
-      <TextContainer>
-        <TitleLink to="/">
+    <div className="header">
+      <div className="public-link title-link">
+        <Link to="/">
           <img width="120px" height="35px" src={TitleIMG} alt="Nubecula" />
-        </TitleLink>
-        {!user ? (
-          <React.Fragment>
-            <SignIn to={{ pathname: "/sign-in", prevPath: location.pathname }}>
+        </Link>
+      </div>
+      {!user ? (
+        <React.Fragment>
+          <div className="public-link">
+            <Link to={{ pathname: "/sign-in", prevPath: location.pathname }}>
               <img width="55px" height="29px" src={SignInIMG} alt="sign in" />
-            </SignIn>
-            <SignUpAndOut
-              to={{ pathname: "/sign-up", prevPath: location.pathname }}
-            >
+            </Link>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <Link to={{ pathname: "/sign-up", prevPath: location.pathname }}>
               <img width="62px" height="30px" src={SignUpIMG} alt="sign up" />
-            </SignUpAndOut>
-          </React.Fragment>
-        ) : (
-          <SignUpAndOut to="/file-manager" onClick={() => signOut()}>
-            <img width="60px" height="30px" src={LogoutIMG} alt="log out" />
-          </SignUpAndOut>
-        )}
-      </TextContainer>
-    </NubeculaHeader>
+            </Link>
+          </div>
+        </React.Fragment>
+      ) : (
+        <div
+          className="user-button"
+          onClick={() => {
+            setShowAppOptions(!showAppOptions);
+          }}
+        >
+          <span className="user-button-text">{user}</span>
+        </div>
+      )}
+    </div>
   );
 };
 

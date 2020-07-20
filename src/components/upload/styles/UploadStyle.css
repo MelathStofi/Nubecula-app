@@ -1,7 +1,7 @@
 .upload-card {
   background-color: white;
   padding: 32px;
-  width: 25%;
+  width: 500px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -13,6 +13,14 @@
   z-index: 4;
   right: 2%;
   bottom: 2%;
+}
+
+@media only screen and (max-width: 666px) {
+  .upload-card {
+    width: 90%;
+    padding-top: 10px;
+    padding-left: 2%;
+  }
 }
 
 .Upload {

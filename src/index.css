@@ -21,10 +21,15 @@ code {
   color: white;
 }
 
+button {
+  background-color: #9dc8b5;
+}
+
 .App {
 }
 
 .container {
+  position: relative;
 }
 
 .content {

@@ -43,14 +43,16 @@ const File = (props) => {
     setCurrentFile(props.file);
   };
 
-  const renameFile = async () => {
-    rename();
-    const newArray = [...files];
-    const newFile = Object.assign({}, props.file);
-    const index = files.indexOf(props.file);
-    newFile["filename"] = newName;
-    newArray[index] = newFile;
-    setFiles(newArray);
+  const renameFile = (e) => {
+    if (e.target.value !== "" && e.target.value !== props.file.filename) {
+      rename();
+      const newArray = [...files];
+      const newFile = Object.assign({}, props.file);
+      const index = files.indexOf(props.file);
+      newFile["filename"] = newName;
+      newArray[index] = newFile;
+      setFiles(newArray);
+    } else setIsRename(false);
   };
 
   const shareFile = () => {
@@ -145,9 +147,10 @@ const File = (props) => {
                   selected="selected"
                   autoFocus
                   onFocus={(e) => e.target.select()}
+                  onBlur={(e) => renameFile(e)}
                   onChange={(e) => setNewName(e.target.value)}
                   onKeyUp={(e) => {
-                    if (e.keyCode === 13) renameFile();
+                    if (e.keyCode === 13) renameFile(e);
                   }}
                 />
               </ClickAwayListener>

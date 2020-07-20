@@ -12,7 +12,8 @@ import { FilesProvider } from "./contexts/FilesContext";
 import { LoadingContext } from "./contexts/Loading";
 import { FileManagerProvider } from "./contexts/FMContext";
 import { ContextMenuProvider } from "./contexts/ContextMenuContext";
-import Upload from "./components/upload/Upload";
+import { AppOptionsProvider } from "./contexts/AppOptionsContext";
+import AppOptions from "./components/appoptions/AppOptions";
 
 function App() {
   window.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -25,30 +26,32 @@ function App() {
       >
         <BrowserRouter>
           <UserProvider>
-            <FilesProvider>
-              <FileManagerProvider>
-                <ContextMenuProvider>
-                  <Switch>
-                    <Route exact path="/sign-up" component={Auth} />
-                    <Route exact path="/sign-in" component={Auth} />
+            <AppOptionsProvider>
+              <FilesProvider>
+                <FileManagerProvider>
+                  <ContextMenuProvider>
+                    <Switch>
+                      <Route exact path="/sign-up" component={Auth} />
+                      <Route exact path="/sign-in" component={Auth} />
 
-                    <div className="container">
-                      <Header />
-                      <SideBar />
-                      <div className={loading ? "" : "content"}>
-                        <Route exact path="/" component={MainPage} />
-                        <Route
-                          exact
-                          path="/file-manager"
-                          component={FileManager}
-                        />
+                      <div className="container">
+                        <Header />
+                        <SideBar />
+                        <AppOptions />
+                        <div className={loading ? "" : "content"}>
+                          <Route exact path="/" component={MainPage} />
+                          <Route
+                            exact
+                            path="/file-manager"
+                            component={FileManager}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <Upload />
-                  </Switch>
-                </ContextMenuProvider>
-              </FileManagerProvider>
-            </FilesProvider>
+                    </Switch>
+                  </ContextMenuProvider>
+                </FileManagerProvider>
+              </FilesProvider>
+            </AppOptionsProvider>
           </UserProvider>
         </BrowserRouter>
       </LoadingContext.Provider>

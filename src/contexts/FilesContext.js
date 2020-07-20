@@ -19,7 +19,7 @@ export const FilesProvider = (props) => {
         setFiles(resp.data);
         history.push({
           pathname: "/file-manager",
-          search: "?id=" + id,
+          search: id ? "?id=" + id : "",
         });
       }
     });
