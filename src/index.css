@@ -29,10 +29,12 @@ button {
 }
 
 .container {
+  z-index: 1;
   position: relative;
 }
 
 .content {
+  z-index: 1;
   background-color: white;
   border: 1px solid #cccccc;
   box-shadow: 0 0 30px 0px #cccccc;

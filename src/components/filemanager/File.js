@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import BoxImg from "../../resources/box1-01.png";
 import TickedBoxImg from "../../resources/ticked_box.png";
 import DirectoryImg from "../../resources/directory.png";
@@ -10,35 +9,40 @@ import ShowWindowDimensions from "../WindowDimension";
 import { FMContext } from "../../contexts/FMContext";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { ContextMenuContext } from "../../contexts/ContextMenuContext";
-import { useLocation } from "react-router-dom";
 
 const File = (props) => {
-  const location = useLocation();
   const [selected, setSelected] = useState(false);
   const { files, setFiles, loadFiles } = useContext(FilesContext);
   const {
     currentFile,
     setCurrentFile,
+    selectFiles,
     isRename,
     selectedFiles,
-    setSelectedFiles,
     setIsRename,
     newName,
     setNewName,
     rename,
     isCut,
+    share,
   } = useContext(FMContext);
   const { setCurrentMenu } = useContext(ContextMenuContext);
 
-  const loadData = () => {
+  const loadData = (e) => {
     if (props.file.directory) {
       loadFiles(props.file.url, props.file.id);
       setCurrentFile(props.file);
     }
   };
 
+  const handleSelection = (e) => {
+    files.indexOf(currentFile);
+    setSelected(!selected);
+    selectFiles(e, props.file);
+  };
+
   const handleContextMenu = (e) => {
-    if (!selectedFiles.includes(props.file)) handleSelection(e);
+    if (!selectedFiles.includes(props.file)) handleSelection(e, props.file);
     setCurrentMenu("file-contextmenu");
     setCurrentFile(props.file);
   };
@@ -56,58 +60,11 @@ const File = (props) => {
   };
 
   const shareFile = () => {
-    axios({
-      method: "put",
-      url: process.env.REACT_APP_SHARE_URL + "/" + props.file.id,
-      withCredentials: true,
-    })
-      .catch((error) => {
-        console.log("couldn't share " + props.file.filename);
-      })
-      .then((resp) => {
-        if (resp) {
-          loadFiles(
-            process.env.REACT_APP_BASE_URL + location.search.slice(4),
-            location.search.slice(4)
-          );
-        }
-      });
-  };
-
-  const handleSelection = (e) => {
-    setSelected(!selected);
-    let newArray = selectedFiles;
-    if (e.ctrlKey) {
-      if (!selectedFiles.includes(props.file)) {
-        setSelectedFiles([...selectedFiles, props.file]);
-      } else {
-        newArray.splice(newArray.indexOf(props.file), 1);
-        setSelectedFiles(newArray);
-      }
-    } else if (e.shiftKey) {
-      if (!selectedFiles.includes(props.file) && selectedFiles.length !== 0) {
-        const firstInd = files.indexOf(props.file);
-        const secondInd = files.indexOf(
-          selectedFiles[selectedFiles.length - 1]
-        );
-        firstInd < secondInd
-          ? newArray.slice(firstInd, secondInd)
-          : newArray.slice(secondInd, firstInd);
-        setSelectedFiles(newArray);
-      } else {
-        newArray.splice(newArray.indexOf(props.file), 1);
-        setSelectedFiles(newArray);
-      }
-    } else {
-      setSelectedFiles([props.file]);
-    }
+    share();
   };
 
   const setClassName = () => {
     if (selectedFiles.includes(props.file)) {
-      if (isCut) {
-        return "table-row selected-table-row cut-table-row";
-      }
       return "table-row selected-table-row";
     }
     return "table-row";
@@ -117,16 +74,17 @@ const File = (props) => {
     <div
       id={props.file.id}
       className={setClassName()}
+      onDoubleClick={(event) => loadData(event)}
       onContextMenu={(event) => {
         handleContextMenu(event);
       }}
-      onClick={
-        ShowWindowDimensions() < 900 ? null : (event) => handleSelection(event)
-      }
     >
       <div
-        onDoubleClick={() => loadData()}
-        onClick={ShowWindowDimensions() < 900 ? () => loadData() : null}
+        onClick={
+          ShowWindowDimensions() < 900
+            ? null
+            : (event) => handleSelection(event)
+        }
         className="filename-cell table-cell"
       >
         <div className="filename-text">
@@ -162,7 +120,11 @@ const File = (props) => {
       </div>
       <div
         align="left"
-        onDoubleClick={() => loadData()}
+        onClick={
+          ShowWindowDimensions() < 900
+            ? null
+            : (event) => handleSelection(event)
+        }
         className={
           ShowWindowDimensions() < 666 ? "hidden-div" : "date-cell table-cell"
         }
@@ -171,16 +133,26 @@ const File = (props) => {
       </div>
       <div
         align="left"
-        onDoubleClick={() => loadData()}
+        onClick={
+          ShowWindowDimensions() < 900
+            ? null
+            : (event) => handleSelection(event)
+        }
         className={
           ShowWindowDimensions() < 666 ? "hidden-div" : "type-cell table-cell"
         }
       >
-        <span className="type cell-span">{props.file.type}</span>
+        <span className="type cell-span">
+          {!props.file.directory ? props.file.type : "folder"}
+        </span>
       </div>
       <div
         align="left"
-        onDoubleClick={() => loadData()}
+        onClick={
+          ShowWindowDimensions() < 900
+            ? null
+            : (event) => handleSelection(event)
+        }
         className={
           ShowWindowDimensions() < 666
             ? "hidden-div"
@@ -193,7 +165,11 @@ const File = (props) => {
       </div>
       <div
         align="left"
-        onDoubleClick={() => loadData()}
+        onClick={
+          ShowWindowDimensions() < 900
+            ? null
+            : (event) => handleSelection(event)
+        }
         className={
           ShowWindowDimensions() < 666 ? "hidden-div" : "size-cell table-cell"
         }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import Upload from "../upload/Upload";
 
 import FileList from "./FileList";
 import { Link, useLocation, useHistory } from "react-router-dom";
@@ -11,6 +10,8 @@ import "./styles/ToolbarStyle.css";
 import FileManagerContainer from "../container/FileManagerContainer";
 import { FMContext } from "../../contexts/FMContext";
 import { ContextMenuContext } from "../../contexts/ContextMenuContext";
+import ToolBar from "./ToolBar";
+import SideBar from "../sidebar/SideBar";
 
 const FileManager = (props) => {
   const { loading, setLoading } = useLoading();
@@ -30,8 +31,6 @@ const FileManager = (props) => {
     share,
     addFolder,
     download,
-    showUpload,
-    setShowUpload,
   } = useContext(FMContext);
   const { currentMenu, setOptionClicked } = useContext(ContextMenuContext);
 
@@ -39,7 +38,7 @@ const FileManager = (props) => {
     setCurrentFile("root");
     axios({
       method: "get",
-      url: process.env.REACT_APP_USER_URL,
+      url: process.env.REACT_APP_VERIFY_USER_URL,
       withCredentials: true,
     })
       .catch((error) => {
@@ -163,10 +162,6 @@ const FileManager = (props) => {
     return contextMenuItems;
   };
 
-  const handleAddFolder = () => {
-    addFolder();
-  };
-
   if (loading) return <LoadingScreen />;
   if (!user) {
     return (
@@ -190,22 +185,12 @@ const FileManager = (props) => {
   }
   return (
     <div id="user-fm">
+      <SideBar />
       <FileManagerContainer
         id="file-manager-operations"
         menuItems={giveContextMenu()}
       >
-        <div className="fm-title">File Manager</div>
-        <div className="toolbar">
-          <div style={{ paddingRight: "10px" }}>
-            <button className="toolbar-btn" onClick={() => setShowUpload(true)}>
-              Upload files
-            </button>
-          </div>
-          <button className="toolbar-btn" onClick={() => handleAddFolder()}>
-            Create Folder
-          </button>
-        </div>
-        {showUpload ? <Upload /> : null}
+        <ToolBar />
         <FileList />
       </FileManagerContainer>
     </div>

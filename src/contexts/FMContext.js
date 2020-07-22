@@ -7,6 +7,7 @@ export const FMContext = createContext();
 
 export const FileManagerProvider = (props) => {
   const [currentFile, setCurrentFile] = useState(null);
+  const [indexOfSelected, setIndexOfSelected] = useState(-1);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [clipboard, setClipboard] = useState(null);
   const [isCut, setIsCut] = useState(false);
@@ -26,6 +27,33 @@ export const FileManagerProvider = (props) => {
       data: data,
     });
     return await resp.data;
+  };
+
+  const selectFiles = (e, file) => {
+    let selFiles = selectedFiles;
+    if (!e.shiftKey) {
+      setIndexOfSelected(files.indexOf(file));
+    }
+    if (e.shiftKey) {
+      const start =
+        files.indexOf(file) <= indexOfSelected
+          ? files.indexOf(file)
+          : indexOfSelected;
+      const end =
+        files.indexOf(file) >= indexOfSelected
+          ? files.indexOf(file)
+          : indexOfSelected;
+      setSelectedFiles(files.slice(start, end + 1));
+    } else if (e.ctrlKey) {
+      if (!selectedFiles.includes(file)) {
+        setSelectedFiles([...selectedFiles, file]);
+      } else {
+        selFiles.splice(selFiles.indexOf(file), 1);
+        setSelectedFiles(selFiles);
+      }
+    } else {
+      setSelectedFiles([file]);
+    }
   };
 
   const openFile = () => {
@@ -48,7 +76,7 @@ export const FileManagerProvider = (props) => {
         return resp;
       }
     } catch {
-      console.log("nem joló");
+      alert("Cannot rename file(s)");
     }
   };
 
@@ -67,7 +95,7 @@ export const FileManagerProvider = (props) => {
     if (isLoosePaste) {
       data = {
         files: clipboard,
-        targetDirId: location.search.slice(4),
+        targetDirId: new URLSearchParams(location.search).get("id"),
       };
     } else {
       data = {
@@ -75,7 +103,6 @@ export const FileManagerProvider = (props) => {
         targetDirId: currentFile.id,
       };
     }
-
     try {
       let resp;
       if (!isCut) {
@@ -89,7 +116,7 @@ export const FileManagerProvider = (props) => {
         setFiles(newArray);
       }
     } catch {
-      console.log("nem joló");
+      alert("Cannot paste file(s)!\nMaybe your storage is full.");
     }
   };
 
@@ -109,7 +136,7 @@ export const FileManagerProvider = (props) => {
         );
       });
     } catch {
-      console.log("nem joló");
+      alert("Cannot remove file(s)");
     }
   };
 
@@ -123,7 +150,7 @@ export const FileManagerProvider = (props) => {
     try {
       sendData("put", process.env.REACT_APP_SHARE_URL + "/" + fileId, null);
     } catch {
-      console.log("nem joló");
+      alert("Cannot remove share this file");
     }
   };
 
@@ -132,11 +159,11 @@ export const FileManagerProvider = (props) => {
       id: null,
       name: "New folder",
     };
+    let id = new URLSearchParams(location.search).get("id");
+    if (id == null) id = "";
     const resp = await sendData(
       "post",
-      process.env.REACT_APP_BASE_URL +
-        "/directories/" +
-        location.search.slice(4),
+      process.env.REACT_APP_BASE_URL + "/directories/" + id,
       data
     );
     if (resp) {
@@ -162,6 +189,7 @@ export const FileManagerProvider = (props) => {
       value={{
         currentFile: currentFile,
         setCurrentFile: setCurrentFile,
+        selectFiles: selectFiles,
         selectedFiles: selectedFiles,
         setSelectedFiles: setSelectedFiles,
         clipboard: clipboard,

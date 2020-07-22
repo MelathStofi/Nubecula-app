@@ -6,7 +6,7 @@ export default function MainPage() {
 
   return (
     <div>
-      <h1>Greetings {username}!</h1>
+      <h1>&nbsp;&nbsp;&nbsp;&nbsp;Greetings {username}!</h1>
     </div>
   );
 }

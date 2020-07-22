@@ -58,6 +58,12 @@
 .t-body {
   height: calc(100vh - 16.2rem);
   overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.t-body::-webkit-scrollbar {
+  display: none;
 }
 
 .table-row {
@@ -90,7 +96,7 @@
   margin: auto;
   font-size: 95%;
   height: 5%;
-  padding-left: 2%;
+
   padding-top: 5px;
 }
 
@@ -112,11 +118,11 @@
   .filename-cell {
     width: 90%;
     padding-top: 10px;
-    padding-left: 2%;
   }
 }
 
 .filename-text {
+  padding-left: 5px;
   max-width: 90%;
   white-space: nowrap;
   overflow: hidden;
@@ -182,11 +188,10 @@
 }
 
 .shared {
-  font-size: 95%;
-  width: 10%;
 }
 
 .filename {
+  color: #747373;
   top: 100px;
   margin: auto;
   width: 40%;

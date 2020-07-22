@@ -15,7 +15,7 @@ import { ContextMenuProvider } from "./contexts/ContextMenuContext";
 import { AppOptionsProvider } from "./contexts/AppOptionsContext";
 import AppOptions from "./components/appoptions/AppOptions";
 
-function App() {
+function App(props) {
   window.addEventListener("contextmenu", (e) => e.preventDefault());
   const [loading, setLoading] = useState(true);
 
@@ -36,10 +36,10 @@ function App() {
 
                       <div className="container">
                         <Header />
-                        <SideBar />
+
                         <AppOptions />
                         <div className={loading ? "" : "content"}>
-                          <Route exact path="/" component={MainPage} />
+                          <Route exact path="/index" component={MainPage} />
                           <Route
                             exact
                             path="/file-manager"

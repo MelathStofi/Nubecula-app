@@ -34,7 +34,9 @@
 }
 
 .public-link {
-  padding-right: 3%;
+  position: absolute;
+  top: 19%;
+  right: 3%;
 }
 
 .user-button {
@@ -48,7 +50,4 @@
 .user-button:hover {
   cursor: pointer;
   border: 1px solid transparent;
-}
-
-.user-button-text {
 }

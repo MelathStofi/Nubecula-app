@@ -16,9 +16,11 @@ const FileList = (props) => {
   const location = useLocation();
 
   useEffect(() => {
+    let id = new URLSearchParams(location.search).get("id");
+    if (id == null) id = "";
     axios({
       method: "get",
-      url: process.env.REACT_APP_BASE_URL + "/" + location.search.slice(4),
+      url: process.env.REACT_APP_BASE_URL + "/" + id,
       withCredentials: true,
     }).then((resp) => {
       if (resp) {

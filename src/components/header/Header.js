@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from "react";
 import TitleIMG from "../../resources/title.png";
 import SignInIMG from "../../resources/sign_in.png";
 import SignUpIMG from "../../resources/sign_up.png";
-import LogoutIMG from "../../resources/log_out.png";
 import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
 import { useLocation, Link } from "react-router-dom";
@@ -20,7 +19,7 @@ const Header = (props) => {
   useEffect(() => {
     axios({
       method: "get",
-      url: process.env.REACT_APP_USER_URL,
+      url: process.env.REACT_APP_VERIFY_USER_URL,
       withCredentials: true,
     })
       .catch((error) => {
@@ -38,7 +37,7 @@ const Header = (props) => {
   }
   return (
     <div className="header">
-      <div className="public-link title-link">
+      <div className="title-link">
         <Link to="/">
           <img width="120px" height="35px" src={TitleIMG} alt="Nubecula" />
         </Link>
@@ -46,11 +45,17 @@ const Header = (props) => {
       {!user ? (
         <React.Fragment>
           <div className="public-link">
-            <Link to={{ pathname: "/sign-in", prevPath: location.pathname }}>
+            <Link
+              to={{ pathname: "/sign-in", prevPath: location.pathname }}
+              className="sign-in_link"
+            >
               <img width="55px" height="29px" src={SignInIMG} alt="sign in" />
             </Link>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Link to={{ pathname: "/sign-up", prevPath: location.pathname }}>
+            <Link
+              to={{ pathname: "/sign-up", prevPath: location.pathname }}
+              className="sign-in_link"
+            >
               <img width="62px" height="30px" src={SignUpIMG} alt="sign up" />
             </Link>
           </div>

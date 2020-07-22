@@ -3,6 +3,7 @@ import Dropzone from "./Dropzone";
 import Progress from "./Progress";
 import "./styles/UploadStyle.css";
 import { FMContext } from "../../contexts/FMContext";
+import { useLocation } from "react-router-dom";
 
 const Upload = (props) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -10,6 +11,7 @@ const Upload = (props) => {
   const [uploadProgress, setUploadProgress] = useState({});
   const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
   const { setShowUpload } = useContext(FMContext);
+  const location = useLocation();
 
   function onFilesAdded(files) {
     setUploadedFiles(uploadedFiles.concat(files));
@@ -28,32 +30,13 @@ const Upload = (props) => {
       setSuccessfullyUploaded(true);
       setUploading(false);
     } catch (e) {
-      // Not Production ready! Do some error handling here instead...
+      // not ready
       setSuccessfullyUploaded(true);
       setUploading(false);
     }
   };
 
   const sendRequest = (file) => {
-    // const data = new FormData();
-    // data.append("files", file);
-
-    // axios({
-    //   method: "post",
-    //   url: process.env.REACT_APP_BASE_URL,
-    //   data: data,
-    //   withCredentials: true,
-    // })
-    //   .catch((error) => {
-    //     //console.clear();
-    //     console.log("You cannot upload file");
-    //   })
-    //   .then((resp) => {
-    //     if (resp) {
-    //       setFiles([...files, uploadFiles]);
-    //       setUploadFiles([]);
-    //     }
-    //   });
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
 
@@ -85,7 +68,9 @@ const Upload = (props) => {
       const formData = new FormData();
       formData.append("files", file);
       console.log(formData.getAll("files"));
-      req.open("POST", process.env.REACT_APP_BASE_URL);
+      let id = new URLSearchParams(location.search).get("id");
+      if (id == null) id = "";
+      req.open("POST", process.env.REACT_APP_BASE_URL + "/" + id);
       req.withCredentials = true;
       req.send(formData);
     });
@@ -114,6 +99,7 @@ const Upload = (props) => {
     if (successfullyUploaded) {
       return (
         <button
+          className="upload-btn"
           onClick={() => {
             setUploadedFiles([]);
             setSuccessfullyUploaded(false);
@@ -125,6 +111,7 @@ const Upload = (props) => {
     } else {
       return (
         <button
+          className="upload-btn"
           disabled={uploadedFiles.length < 0 || uploading}
           onClick={() => uploadFiles()}
         >
