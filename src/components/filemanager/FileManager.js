@@ -58,9 +58,7 @@ const FileManager = (props) => {
       withCredentials: true,
     })
       .catch((error) => {
-        setUser({
-          username: "Unkown",
-        });
+        console.log("no user signed in");
         setLoading(false);
       })
       .then((resp) => {
