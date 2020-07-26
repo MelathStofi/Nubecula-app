@@ -1,0 +1,82 @@
+@keyframes slideInFromTop {
+  0% {
+    transform: translateX(5%);
+    transform: translateY(-8%);
+  }
+  100% {
+    transform: translateX(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.App-options-card {
+  position: absolute;
+  z-index: 10;
+  right: 10px;
+  top: 10px;
+  width: 200px;
+  height: 350px;
+  text-align: right;
+  background-color: transparent;
+}
+
+.App-options {
+  animation: fadein 0.4s;
+
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  border-bottom-left-radius: 200px;
+  border-bottom-right-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: 8px 8px 20px 5px grey;
+  text-align: right;
+}
+
+.App-options:hover {
+  -webkit-transform: scale(0.995);
+  -ms-transform: scale(0.995);
+  transform: scale(0.995);
+}
+
+.app-option_item {
+  font-size: 1.4rem;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  padding-right: 40px;
+}
+
+.app-option_item:hover {
+  cursor: pointer;
+  font-size: 1.45rem;
+}
+
+#logout-opt {
+  color: rgb(240, 0, 0);
+}
+
+#logout-opt:hover {
+  color: red;
+}
+
+#me-opt:hover {
+  color: #73a790;
+}
+
+#sign-up-opt {
+  color: rgb(144, 144, 248);
+}
+
+#sign-in-opt {
+  color: rgb(17, 209, 17);
+}
