@@ -1,35 +1,17 @@
-import React, { useEffect, useContext } from "react";
-import axios from "axios";
+import React, { useContext } from "react";
 
 import File from "./File";
-import { FilesContext } from "../../contexts/FilesContext";
-import { useLocation } from "react-router-dom";
 import ShowWindowDimensions from "../WindowDimension";
 import { ClickAwayListener } from "@material-ui/core";
 import { FMContext } from "../../contexts/FMContext";
 import { ContextMenuContext } from "../../contexts/ContextMenuContext";
 
-const FileList = (props) => {
-  const { files, setFiles } = useContext(FilesContext);
-  const { setSelectedFiles } = useContext(FMContext);
+const FileList = ({ files, pathWithKeyId, queries, setQueries, trashBin }) => {
+  const { setSelectedFiles, setIndexOfSelected } = useContext(FMContext);
   const { optionClicked, setOptionClicked } = useContext(ContextMenuContext);
-  const location = useLocation();
-
-  useEffect(() => {
-    let id = new URLSearchParams(location.search).get("id");
-    if (id == null) id = "";
-    axios({
-      method: "get",
-      url: process.env.REACT_APP_BASE_URL + "/" + id,
-      withCredentials: true,
-    }).then((resp) => {
-      if (resp) {
-        setFiles(resp.data);
-      }
-    });
-  }, [location, setFiles]);
 
   const handleClickAway = () => {
+    setIndexOfSelected(null);
     if (!optionClicked) {
       setSelectedFiles([]);
     }
@@ -42,34 +24,73 @@ const FileList = (props) => {
         className={ShowWindowDimensions() < 666 ? "hidden-t-head" : "t-head"}
       >
         <div className="table-head-row">
-          <div className="filename-th th">
+          <div
+            className="filename-th th"
+            onClick={() => setQueries(["filename", !queries[1]])}
+          >
             <span className="head-span cell-span">Name</span>
           </div>
           <div className="date-th th">
-            <span className="head-span cell-span">Modification Date</span>
+            <span
+              className="head-span cell-span"
+              onClick={() => setQueries(["modificationDate", !queries[1]])}
+            >
+              Modification Date
+            </span>
           </div>
           <div className="type-th th">
-            <span className="head-span cell-span">Type</span>
+            <span
+              className="head-span cell-span"
+              onClick={() => setQueries(["type", !queries[1]])}
+            >
+              Type
+            </span>
           </div>
           <div className="extension-th th">
-            <span className="head-span cell-span">Extension</span>
+            <span
+              className="head-span cell-span"
+              onClick={() => setQueries(["extension", !queries[1]])}
+            >
+              Extension
+            </span>
           </div>
           <div className="size-th th">
-            <span className="head-span cell-span">Size</span>
+            <span
+              className="head-span cell-span"
+              onClick={() => setQueries(["size", !queries[1]])}
+            >
+              Size
+            </span>
           </div>
           <div className="shared-th th">
-            <span className="head-span cell-span">Shared</span>
+            <span
+              className="head-span cell-span"
+              onClick={() => setQueries(["shared", !queries[1]])}
+            >
+              Shared
+            </span>
           </div>
         </div>
       </div>
 
       <div className="t-body">
         <ClickAwayListener onClickAway={() => handleClickAway()}>
-          <div>
-            {files.map((file) => (
-              <File file={file} key={file.id} />
-            ))}
-          </div>
+          {files.length !== 0 ? (
+            <div>
+              {files.map((file) => (
+                <File
+                  file={file}
+                  key={file.id}
+                  pathWithKeyId={pathWithKeyId}
+                  trashBin={trashBin}
+                />
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "20%" }}>
+              Empty folder
+            </div>
+          )}
         </ClickAwayListener>
       </div>
     </div>

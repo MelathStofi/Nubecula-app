@@ -35,7 +35,7 @@ button {
 
 .content {
   z-index: 1;
-  background-color: white;
+  background-color: rgb(254, 254, 254);
   border: 1px solid #cccccc;
   box-shadow: 0 0 30px 0px #cccccc;
   margin-top: 4rem;
@@ -47,11 +47,5 @@ button {
   .content {
     margin-right: 0px;
     margin-left: 0px;
-  }
-}
-
-@media only screen and (max-width: 1599px) {
-  .content {
-    margin-right: 0px;
   }
 }

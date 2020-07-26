@@ -1,12 +1,11 @@
 import React, { useEffect, useContext } from "react";
 import TitleIMG from "../../resources/title.png";
-import SignInIMG from "../../resources/sign_in.png";
-import SignUpIMG from "../../resources/sign_up.png";
 import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLoading } from "../../contexts/Loading";
 import { AppOptionsContext } from "../../contexts/AppOptionsContext";
+import MenuIMG from "../../resources/menu.png";
 
 import "./styles/HeaderStyle.css";
 
@@ -14,12 +13,11 @@ const Header = (props) => {
   const { loading, setLoading } = useLoading();
   const { user, setUser } = useContext(UserContext);
   const { showAppOptions, setShowAppOptions } = useContext(AppOptionsContext);
-  const location = useLocation();
 
   useEffect(() => {
     axios({
       method: "get",
-      url: process.env.REACT_APP_VERIFY_USER_URL,
+      url: process.env.REACT_APP_CURRENT_USER_URL,
       withCredentials: true,
     })
       .catch((error) => {
@@ -44,20 +42,13 @@ const Header = (props) => {
       </div>
       {!user ? (
         <React.Fragment>
-          <div className="public-link">
-            <Link
-              to={{ pathname: "/sign-in", prevPath: location.pathname }}
-              className="sign-in_link"
-            >
-              <img width="55px" height="29px" src={SignInIMG} alt="sign in" />
-            </Link>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Link
-              to={{ pathname: "/sign-up", prevPath: location.pathname }}
-              className="sign-in_link"
-            >
-              <img width="62px" height="30px" src={SignUpIMG} alt="sign up" />
-            </Link>
+          <div
+            className="public-link"
+            onClick={() => {
+              setShowAppOptions(!showAppOptions);
+            }}
+          >
+            <img width="30px" height="32px" src={MenuIMG} alt="menu" />
           </div>
         </React.Fragment>
       ) : (
@@ -67,7 +58,7 @@ const Header = (props) => {
             setShowAppOptions(!showAppOptions);
           }}
         >
-          <span className="user-button-text">{user}</span>
+          <span className="user-button-text">{user.username}</span>
         </div>
       )}
     </div>

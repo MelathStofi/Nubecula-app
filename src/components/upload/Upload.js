@@ -4,8 +4,11 @@ import Progress from "./Progress";
 import "./styles/UploadStyle.css";
 import { FMContext } from "../../contexts/FMContext";
 import { useLocation } from "react-router-dom";
+import { FilesContext } from "../../contexts/FilesContext";
 
 const Upload = (props) => {
+  var respFiles = [];
+  const { files, setFiles } = useContext(FilesContext);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
@@ -26,11 +29,16 @@ const Upload = (props) => {
     });
     try {
       await Promise.all(promises);
+      setTimeout(() => {
+        const newFiles = files.concat(respFiles);
+        setFiles(newFiles);
+      }, 2000);
 
       setSuccessfullyUploaded(true);
       setUploading(false);
     } catch (e) {
       // not ready
+      alert("Upload failed");
       setSuccessfullyUploaded(true);
       setUploading(false);
     }
@@ -39,7 +47,7 @@ const Upload = (props) => {
   const sendRequest = (file) => {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
-
+      req.responseType = "json";
       req.upload.addEventListener("progress", (event) => {
         if (event.lengthComputable) {
           const copy = { ...uploadProgress };
@@ -66,12 +74,18 @@ const Upload = (props) => {
       });
 
       const formData = new FormData();
-      formData.append("files", file);
-      console.log(formData.getAll("files"));
+      formData.append("file", file);
+
       let id = new URLSearchParams(location.search).get("id");
       if (id == null) id = "";
       req.open("POST", process.env.REACT_APP_BASE_URL + "/" + id);
       req.withCredentials = true;
+
+      req.onload = () => {
+        const resp = req.response;
+        respFiles = [...respFiles, resp];
+      };
+
       req.send(formData);
     });
   };

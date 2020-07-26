@@ -2,22 +2,26 @@ import React, { useState, createContext, useContext } from "react";
 import axios from "axios";
 import { FilesContext } from "./FilesContext";
 import { useLocation } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 export const FMContext = createContext();
 
 export const FileManagerProvider = (props) => {
   const [currentFile, setCurrentFile] = useState(null);
-  const [indexOfSelected, setIndexOfSelected] = useState(-1);
+  const [indexOfSelected, setIndexOfSelected] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [clipboard, setClipboard] = useState(null);
   const [isCut, setIsCut] = useState(false);
   const [newName, setNewName] = useState("");
   const [isRename, setIsRename] = useState(false);
-  const { loadFiles, files, setFiles } = useContext(FilesContext);
+  const { loadFiles, loadPublicUserFiles, files, setFiles } = useContext(
+    FilesContext
+  );
   const [name, setName] = useState("");
   const [isAddDir, setIsAddDir] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const location = useLocation();
+  const { loadCurrentUser } = useContext(UserContext);
 
   const sendData = async (method, url, data) => {
     const resp = await axios({
@@ -56,8 +60,16 @@ export const FileManagerProvider = (props) => {
     }
   };
 
+  const selectAll = () => {
+    setSelectedFiles(files);
+  };
+
   const openFile = () => {
     if (currentFile.directory) loadFiles(currentFile.url, currentFile.id);
+  };
+
+  const openPublicFile = (username) => {
+    if (currentFile.directory) loadPublicUserFiles(username, currentFile.id);
   };
 
   const rename = async () => {
@@ -106,17 +118,76 @@ export const FileManagerProvider = (props) => {
     try {
       let resp;
       if (!isCut) {
-        resp = await sendData("put", process.env.REACT_APP_COPY_URL, data);
+        resp = await sendData("post", process.env.REACT_APP_COPY_URL, data);
+        loadCurrentUser();
       } else {
         resp = await sendData("put", process.env.REACT_APP_REPLACE_URL, data);
       }
       if (resp) {
-        let newArray = files.concat(resp);
-        setSelectedFiles(resp);
-        setFiles(newArray);
+        if (isLoosePaste) {
+          let newArray = files.concat(resp);
+          setSelectedFiles(resp);
+          setFiles(newArray);
+        } else {
+          let filesClone = files.slice();
+          for (let rmfile of clipboard) {
+            filesClone = filesClone.filter((file) => rmfile.id !== file.id);
+          }
+          setFiles(filesClone);
+        }
       }
     } catch {
       alert("Cannot paste file(s)!\nMaybe your storage is full.");
+    }
+  };
+
+  const moveToTrash = () => {
+    const deletedFiles = selectedFiles.slice();
+    let filesClone = files.slice();
+    for (let deletedFile of deletedFiles) {
+      filesClone = filesClone.filter((file) => deletedFile.id !== file.id);
+    }
+    setFiles(filesClone);
+    const data = {
+      files: deletedFiles,
+      targetDirId: null,
+    };
+    try {
+      deletedFiles.map(async (file) => {
+        await sendData("put", process.env.REACT_APP_TRASH_BIN_URL, data);
+      });
+    } catch {
+      alert("Cannot remove file(s)");
+    }
+  };
+
+  const restore = () => {
+    const data = {
+      files: selectedFiles,
+      targetDirId: null,
+    };
+    let filesClone = files.slice();
+    for (let restoredFile of selectedFiles) {
+      filesClone = filesClone.filter((file) => restoredFile.id !== file.id);
+    }
+    setFiles(filesClone);
+    try {
+      sendData("put", process.env.REACT_APP_REPLACE_URL, data);
+    } catch {
+      alert("Couldn't restore the files");
+    }
+  };
+
+  const restoreAll = async () => {
+    const data = {
+      files: files,
+      targetDirId: null,
+    };
+    try {
+      await sendData("put", process.env.REACT_APP_REPLACE_URL, data);
+      setFiles([]);
+    } catch {
+      alert("Couldn't restore the files");
     }
   };
 
@@ -125,8 +196,18 @@ export const FileManagerProvider = (props) => {
     let filesClone = files.slice();
     for (let deletedFile of deletedFiles) {
       filesClone = filesClone.filter((file) => deletedFile.id !== file.id);
+      console.log(deletedFile);
     }
     setFiles(filesClone);
+    removeFromDB(deletedFiles);
+  };
+
+  const removeAll = async () => {
+    removeFromDB(files);
+    setFiles([]);
+  };
+
+  const removeFromDB = (deletedFiles) => {
     try {
       deletedFiles.map(async (file) => {
         await sendData(
@@ -134,6 +215,7 @@ export const FileManagerProvider = (props) => {
           process.env.REACT_APP_BASE_URL + "/" + file["id"],
           null
         );
+        loadCurrentUser();
       });
     } catch {
       alert("Cannot remove file(s)");
@@ -141,14 +223,25 @@ export const FileManagerProvider = (props) => {
   };
 
   const share = (fileId = currentFile.id) => {
-    const index = files.indexOf(currentFile);
-    let newFile = Object.assign({}, files[index]);
-    newFile["shared"] = !currentFile.shared;
-    let newArray = [...files];
-    newArray[index] = newFile;
-    setFiles(newArray);
+    const sharedFiles = selectedFiles.slice();
+    let filesClone = [...files];
+    for (let sharedFile of sharedFiles) {
+      filesClone = filesClone.map((file) => {
+        if (sharedFile.id === file.id) {
+          file.shared = !file.shared;
+          return file;
+        } else return file;
+      });
+    }
+    setFiles(filesClone);
     try {
-      sendData("put", process.env.REACT_APP_SHARE_URL + "/" + fileId, null);
+      sharedFiles.map(async (file) => {
+        await sendData(
+          "put",
+          process.env.REACT_APP_SHARE_URL + "/" + file.id,
+          null
+        );
+      });
     } catch {
       alert("Cannot remove share this file");
     }
@@ -190,10 +283,12 @@ export const FileManagerProvider = (props) => {
         currentFile: currentFile,
         setCurrentFile: setCurrentFile,
         selectFiles: selectFiles,
+        selectAll: selectAll,
         selectedFiles: selectedFiles,
         setSelectedFiles: setSelectedFiles,
         clipboard: clipboard,
         openFile: openFile,
+        openPublicFile: openPublicFile,
         rename: rename,
         newName: newName,
         setNewName: setNewName,
@@ -201,8 +296,13 @@ export const FileManagerProvider = (props) => {
         setIsRename: setIsRename,
         copy: copy,
         cut: cut,
+        isCut: isCut,
         paste: paste,
+        moveToTrash: moveToTrash,
+        restore: restore,
+        restoreAll: restoreAll,
         remove: remove,
+        removeAll: removeAll,
         share: share,
         addFolder: addFolder,
         name: name,
@@ -212,6 +312,7 @@ export const FileManagerProvider = (props) => {
         download: download,
         showUpload: showUpload,
         setShowUpload: setShowUpload,
+        setIndexOfSelected: setIndexOfSelected,
       }}
     >
       {props.children}

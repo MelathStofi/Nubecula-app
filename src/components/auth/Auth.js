@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
 
@@ -17,10 +17,15 @@ const Auth = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
-
   const { setUser, setRoles } = useContext(UserContext);
-
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    props.setIsAuth(true);
+    return () => {
+      props.setIsAuth(false);
+    };
+  });
 
   const submit = () => {
     if (isSignUp) {
@@ -128,6 +133,7 @@ const Auth = (props) => {
           <input
             className="auth-input"
             type="text"
+            maxLength="10"
             name="username"
             placeholder="username"
             onChange={(e) => setUsername(e.target.value)}

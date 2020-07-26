@@ -37,13 +37,21 @@ const ContextMenu = ({ parentRef, id, items }) => {
     };
   });
 
-  const style = {
-    top: y,
-    left: x,
-  };
+  function setStyle() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    if (x >= width - 200) {
+      if (y >= height - items.length * 30) {
+        return { bottom: height - y, right: width - x };
+      }
+      return { top: y, right: width - x };
+    } else if (y >= height - items.length * 30)
+      return { bottom: height - y, left: x };
+    return { top: y, left: x };
+  }
 
-  return visible ? (
-    <div className="context-menu" style={style}>
+  return visible && items.length !== 0 ? (
+    <div className="context-menu" style={setStyle()}>
       {items.map((item, index) => {
         return (
           <div

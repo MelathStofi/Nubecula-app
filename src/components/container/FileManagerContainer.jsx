@@ -1,8 +1,6 @@
 import React, { useRef } from "react";
 import ContextMenu from "../contextmenu/ContextMenu.jsx";
 
-//import "./styles/FMContainerStyle.css";
-
 const FileManagerContainer = ({ children, id, menuItems }) => {
   const containerRef = useRef(null);
 

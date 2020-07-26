@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import Auth from "./components/auth/Auth";
 import MainPage from "./components/MainPage";
-import Header from "./components/header/Header";
-import SideBar from "./components/sidebar/SideBar";
 import FileManager from "./components/filemanager/FileManager";
 
 import { UserProvider } from "./contexts/UserContext";
@@ -13,10 +11,14 @@ import { LoadingContext } from "./contexts/Loading";
 import { FileManagerProvider } from "./contexts/FMContext";
 import { ContextMenuProvider } from "./contexts/ContextMenuContext";
 import { AppOptionsProvider } from "./contexts/AppOptionsContext";
+import Users from "./components/user/Users";
+import PublicFileExplorer from "./components/user/PublicFileExplorer";
+import Header from "./components/header/Header";
 import AppOptions from "./components/appoptions/AppOptions";
 
 function App(props) {
   window.addEventListener("contextmenu", (e) => e.preventDefault());
+  const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
   return (
@@ -30,24 +32,34 @@ function App(props) {
               <FilesProvider>
                 <FileManagerProvider>
                   <ContextMenuProvider>
-                    <Switch>
-                      <Route exact path="/sign-up" component={Auth} />
-                      <Route exact path="/sign-in" component={Auth} />
-
-                      <div className="container">
-                        <Header />
-
-                        <AppOptions />
-                        <div className={loading ? "" : "content"}>
+                    <div className="container">
+                      <Header />
+                      <AppOptions />
+                      <div className={isAuth || loading ? "" : "content"}>
+                        <Switch>
+                          <Route exact path="/">
+                            <Redirect to="/file-manager" />
+                          </Route>
+                          <Route
+                            path={["/sign-up", "/sign-in"]}
+                            render={(props) => (
+                              <Auth {...props} setIsAuth={setIsAuth} />
+                            )}
+                          />
                           <Route exact path="/index" component={MainPage} />
                           <Route
-                            exact
-                            path="/file-manager"
+                            path={["/file-manager/:param", "/file-manager"]}
                             component={FileManager}
                           />
-                        </div>
+                          <Route exact path="/users" component={Users} />
+                          <Route
+                            exact
+                            path="/users/:username"
+                            component={PublicFileExplorer}
+                          />
+                        </Switch>
                       </div>
-                    </Switch>
+                    </div>
                   </ContextMenuProvider>
                 </FileManagerProvider>
               </FilesProvider>

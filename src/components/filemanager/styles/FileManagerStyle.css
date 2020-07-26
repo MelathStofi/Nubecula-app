@@ -119,6 +119,9 @@
     width: 90%;
     padding-top: 10px;
   }
+  .t-body {
+    height: calc(100vh - 12rem);
+  }
 }
 
 .filename-text {
@@ -146,7 +149,7 @@
 }
 
 .date {
-  font-size: 95%;
+  font-size: 90%;
 }
 
 .type-cell {
@@ -156,7 +159,7 @@
   text-overflow: ellipsis;
 }
 .type {
-  font-size: 95%;
+  font-size: 90%;
   width: 15%;
 }
 
@@ -166,7 +169,7 @@
 
 .extension {
   padding-left: 20%;
-  font-size: 95%;
+  font-size: 90%;
   width: 10%;
 }
 
@@ -211,13 +214,6 @@
 .shared {
   width: 0.5px;
   padding: 1%;
-}
-
-.shared:active {
-  transition: background-color 0.2s;
-  border-radius: 10px;
-  box-shadow: 0px 0px 1px #e6f5ee;
-  background-color: #b1d4c4;
 }
 
 .th:hover {

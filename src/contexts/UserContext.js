@@ -1,31 +1,32 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-  const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [user, setUser] = useState(localStorage.getItem("username"));
   const [roles, setRoles] = useState(localStorage.getItem("roles"));
 
-  const [viewedUser, setViewedUser] = useState(username);
+  const [viewedUser, setViewedUser] = useState(user);
   const [users, setUsers] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     axios({
       method: "get",
-      url: process.env.REACT_APP_VERIFY_USER_URL,
+      url: process.env.REACT_APP_CURRENT_USER_URL,
       withCredentials: true,
     })
       .catch((error) => {
-        setUsername(localStorage.getItem("username"));
+        console.log("No user is signed in");
       })
       .then((resp) => {
         if (resp) {
-          setUsername(resp.data);
-          setViewedUser(resp.data);
+          setUser(resp.data);
         }
       });
-  }, [setUsername]);
+  }, [setUser]);
 
   const loadUsers = () => {
     axios({
@@ -43,20 +44,64 @@ export const UserProvider = (props) => {
       });
   };
 
-  const loadViewedUser = (viewedUsername = username) => {
+  const loadCurrentUser = () => {
     axios({
       method: "get",
-      url: process.env.REACT_APP_USERS_URL + "/" + viewedUsername,
+      url: process.env.REACT_APP_CURRENT_USER_URL,
       withCredentials: true,
     })
       .catch((error) => {
-        alert("No such user");
+        console.log("No user is signed in");
       })
       .then((resp) => {
         if (resp) {
-          setViewedUser(resp.data);
+          setUser(resp.data);
+          console.log(resp.data);
         }
       });
+  };
+
+  const searchUsersAndSet = async (searched) => {
+    if (searched !== "") {
+      const resp = await getSearchedUsers(searched, "false");
+      setUsers(resp);
+      history.push({
+        pathname: "/users",
+        search: "?search=" + searched,
+      });
+    }
+  };
+
+  const getSearchedUsers = async (searched, anywhere) => {
+    const resp = await axios({
+      method: "get",
+      url:
+        process.env.REACT_APP_USERS_URL +
+        "?search=" +
+        searched +
+        "&anywhere=" +
+        anywhere,
+      withCredentials: true,
+    });
+    return await resp.data;
+  };
+
+  const loadViewedUser = async (viewedUsername) => {
+    try {
+      const resp = await getViewedUser(viewedUsername);
+      setViewedUser(resp);
+    } catch {
+      alert("No such user: " + viewedUsername);
+    }
+  };
+
+  const getViewedUser = async (viewedUsername) => {
+    const resp = await axios({
+      method: "get",
+      url: process.env.REACT_APP_USERS_URL + viewedUsername,
+      withCredentials: true,
+    });
+    return await resp.data;
   };
 
   const renameCurrentUser = (newName) => {
@@ -96,8 +141,8 @@ export const UserProvider = (props) => {
   return (
     <UserContext.Provider
       value={{
-        user: username,
-        setUser: setUsername,
+        user: user,
+        setUser: setUser,
         roles: roles,
         setRoles: setRoles,
         viewedUser: viewedUser,
@@ -105,9 +150,13 @@ export const UserProvider = (props) => {
         users: users,
         setUsers: setUsers,
         loadUsers: loadUsers,
+        loadCurrentUser: loadCurrentUser,
         loadViewedUser: loadViewedUser,
+        getViewedUser: getViewedUser,
         renameCurrentUser: renameCurrentUser,
         deleteAccount: deleteAccount,
+        getSearchedUsers: getSearchedUsers,
+        searchUsersAndSet: searchUsersAndSet,
       }}
     >
       {props.children}

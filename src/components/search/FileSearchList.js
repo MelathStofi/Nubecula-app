@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import DirectoryImg from "../../resources/directory.png";
 import FileImg from "../../resources/file.png";
 
-import "./styles/SearchListStyle.css";
+import "./styles/FileSearchStyle.css";
 import { ClickAwayListener } from "@material-ui/core";
 import { FilesContext } from "../../contexts/FilesContext";
 import { FMContext } from "../../contexts/FMContext";
 
-const SearchList = ({ searchedFiles, setSearchedFiles }) => {
+const FileSearchList = ({ searchedFiles, setSearchedFiles, search }) => {
   const { loadFiles } = useContext(FilesContext);
   const { setSelectedFiles } = useContext(FMContext);
 
@@ -21,6 +21,22 @@ const SearchList = ({ searchedFiles, setSearchedFiles }) => {
       setSelectedFiles([file]);
     }
     setSearchedFiles([]);
+  };
+
+  const getFilename = (filename) => {
+    filename = filename.toLowerCase();
+    const arr = filename.split(search);
+    let str = [];
+    for (let i = 0; i < arr.length - 1; i++) {
+      str.push(arr[i]);
+      str.push(
+        <span style={{ fontWeight: "bold", color: "#545454" }} key={i}>
+          {search}
+        </span>
+      );
+    }
+    str.push(arr[arr.length - 1]);
+    return str;
   };
 
   return searchedFiles.length !== 0 ? (
@@ -37,7 +53,9 @@ const SearchList = ({ searchedFiles, setSearchedFiles }) => {
             ) : (
               <img width="21,5px" height="27px" src={FileImg} alt="FILE" />
             )}
-            <div className="search-list-text">&nbsp;&nbsp;{file.filename}</div>
+            <div className="search-list-text">
+              &nbsp;&nbsp;{getFilename(file.filename)}
+            </div>
           </div>
         ))}
       </div>
@@ -45,4 +63,4 @@ const SearchList = ({ searchedFiles, setSearchedFiles }) => {
   ) : null;
 };
 
-export default SearchList;
+export default FileSearchList;

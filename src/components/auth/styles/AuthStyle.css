@@ -4,7 +4,7 @@
   font-weight: 300;
   font-size: 25px;
   height: 50px;
-  width: 280px;
+  width: 270px;
   padding: 0 20px;
   border: 3px solid #90c5ae;
   border-radius: 20px;
@@ -15,7 +15,7 @@
   border: 3px solid #4a826a;
   border-radius: 20px;
   height: 51px;
-  width: 281px;
+  width: 271px;
 }
 
 .auth-input::placeholder {
@@ -42,12 +42,12 @@
 
 .input-container {
   text-align: center;
-  width: 400px;
+  width: 320px;
   height: 62px;
 }
 
 .auth-container {
-  width: 400px;
+  width: 320px;
   margin: auto;
 }
 
