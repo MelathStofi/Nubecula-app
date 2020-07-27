@@ -10,7 +10,7 @@ import './styles/FileManagerStyle.css';
 import FileManagerContainer from '../container/FileManagerContainer';
 import { FMContext } from '../../contexts/FMContext';
 import { ContextMenuContext } from '../../contexts/ContextMenuContext';
-import ToolBar from '../../toolbar/ToolBar';
+import ToolBar from '../toolbar/ToolBar';
 import SideBar from '../sidebar/SideBar';
 import { FilesContext } from '../../contexts/FilesContext';
 import { UserContext } from '../../contexts/UserContext';
@@ -21,6 +21,8 @@ const FileManager = (props) => {
 	const {
 		files,
 		setFiles,
+		directory,
+		setDirectory,
 		queries,
 		setQueries,
 		showTrashBin,
@@ -70,6 +72,17 @@ const FileManager = (props) => {
 		let id = new URLSearchParams(location.search).get('id');
 		let search = new URLSearchParams(location.search).get('search');
 		if (id == null) id = '';
+		else {
+			axios({
+				method: 'get',
+				url: process.env.REACT_APP_DIRECTORY_URL,
+				withCredentials: true,
+			}).then((resp) => {
+				if (resp) {
+					setDirectory(resp.data);
+				}
+			});
+		}
 		if (props.match.params.param === 'trash-bin') {
 			axios({
 				method: 'get',
@@ -137,6 +150,7 @@ const FileManager = (props) => {
 		props.match.params.param,
 		queries,
 		setCurrentFile,
+		setDirectory,
 		setFiles,
 		setLoading,
 		setShowTrashBin,
@@ -346,6 +360,7 @@ const FileManager = (props) => {
 							<ToolBar
 								user={user}
 								auth={true}
+								directory={directory}
 								showTrashBin={showTrashBin}
 								itemNum={files.length}
 							/>
