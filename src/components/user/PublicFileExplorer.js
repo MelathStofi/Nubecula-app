@@ -46,11 +46,18 @@ const PublicFileExplorer = (props) => {
 
 		// load user's files
 		let id = new URLSearchParams(location.search).get('id');
-		if (id == null) id = '';
-		else {
+		if (id == null) {
+			setDirectory(null);
+			id = '';
+		} else {
 			axios({
 				method: 'get',
-				url: process.env.REACT_APP_DIRECTORY_URL,
+				url:
+					process.env.REACT_APP_PUBLIC_BASE_URL +
+					'/' +
+					props.match.params.username +
+					'/directories/directory/' +
+					id,
 				withCredentials: true,
 			}).then((resp) => {
 				if (resp) {

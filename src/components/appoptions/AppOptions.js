@@ -5,7 +5,6 @@ import { AppOptionsContext } from '../../contexts/AppOptionsContext';
 import { ClickAwayListener } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
-import ShowWindowDimensions from '../WindowDimension';
 
 const AppOptions = (props) => {
 	const history = useHistory();

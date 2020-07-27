@@ -16,20 +16,23 @@ const FileSearchList = ({ searchedFiles, setSearchedFiles, search, user }) => {
 
 	const handleClick = (file) => {
 		if (location.pathname === '/users/' + user.username) {
-			history.push('/users/' + user.username + '?id=' + file.id);
-			setSearchedFiles([]);
+			if (file.directory) {
+				history.push('/users/' + user.username + '?id=' + file.id);
+			} else {
+				history.push(
+					'/users/' + user.username + '?id=' + file.parentDirectoryId
+				);
+			}
 		} else {
 			if (file.directory) {
-				loadFiles(file.url, file.id);
+				history.push('/file-manager?id=' + file.parentDirectoryId);
 			} else {
-				loadFiles(
-					process.env.REACT_APP_BASE_URL + '/' + file.parentDirectoryId,
-					file.parentDirectoryId
-				);
+				history.push('/file-manager?id=' + file.id);
+
 				setSelectedFiles([file]);
 			}
-			setSearchedFiles([]);
 		}
+		setSearchedFiles([]);
 	};
 
 	const getFilename = (filename) => {

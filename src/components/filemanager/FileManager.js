@@ -71,11 +71,13 @@ const FileManager = (props) => {
 		// load files
 		let id = new URLSearchParams(location.search).get('id');
 		let search = new URLSearchParams(location.search).get('search');
-		if (id == null) id = '';
-		else {
+		if (id == null) {
+			setDirectory(null);
+			id = '';
+		} else {
 			axios({
 				method: 'get',
-				url: process.env.REACT_APP_DIRECTORY_URL,
+				url: process.env.REACT_APP_DIRECTORY_URL + '/' + id,
 				withCredentials: true,
 			}).then((resp) => {
 				if (resp) {
@@ -99,6 +101,7 @@ const FileManager = (props) => {
 				withCredentials: true,
 			}).then((resp) => {
 				if (resp) {
+					console.log(resp.data);
 					setFiles(resp.data);
 					setShowTrashBin(true);
 					history.push({

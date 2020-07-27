@@ -102,14 +102,21 @@ export const FilesProvider = (props) => {
 		});
 	};
 
-	const searchFilesAndSet = async (url, searched) => {
+	const searchFilesAndSet = async (url, searched, username = null) => {
 		if (searched !== '') {
 			const resp = await getSearchedFiles(url, searched, 'false');
 			setFiles(resp);
-			history.push({
-				pathname: '/file-manager',
-				search: '?search=' + searched,
-			});
+			if (username == null) {
+				history.push({
+					pathname: '/file-manager',
+					search: '?search=' + searched,
+				});
+			} else {
+				history.push({
+					pathname: '/users/' + username,
+					search: '?search=' + searched,
+				});
+			}
 		}
 	};
 
