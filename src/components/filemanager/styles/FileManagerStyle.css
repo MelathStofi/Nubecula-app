@@ -1,14 +1,14 @@
 @keyframes slideInFromLeft {
-	0% {
-		transform: translateX(-40%);
-	}
-	100% {
-		transform: translateX(0);
-	}
+  0% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .fm-table {
-	bottom: 0%;
+  bottom: 0%;
 }
 
 .t-head {
@@ -16,225 +16,225 @@
 
 .hidden-t-head,
 .hidden-div {
-	display: none;
-	height: 0;
+  display: none;
+  height: 0;
 }
 
 .table-head-row {
-	display: flex;
-	width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 .th {
-	padding: 1% 1% 1% 1.5%;
-	border-right: 1px solid #cccccc;
+  padding: 1% 1% 1% 1.5%;
+  border-right: 1px solid #cccccc;
 }
 
 .filename-th {
-	width: 30%;
+  width: 30%;
 }
 
 .date-th {
-	width: 15%;
+  width: 15%;
 }
 
 .type-th {
-	width: 10%;
+  width: 10%;
 }
 
 .extension-th {
-	width: 10%;
+  width: 10%;
 }
 
 .size-th {
-	width: 10%;
+  width: 10%;
 }
 
 .shared-th {
-	border-right: none;
-	width: 10%;
+  border-right: none;
+  width: 10%;
 }
 
 .t-body {
-	height: calc(100vh - 16.2rem);
-	overflow-y: scroll;
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+  height: calc(100vh - 16.2rem);
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .t-body::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 .table-row {
-	animation: 0.2s ease-out 0s 1 slideInFromLeft;
-	display: flex;
-	border: 1px solid transparent;
+  animation: 0.2s ease-out 0s 1 slideInFromLeft;
+  display: flex;
+  border: 1px solid transparent;
 }
 
 .table-row:hover {
-	cursor: default;
-	background-color: #e6fff9;
+  cursor: default;
+  background-color: #e6fff9;
 }
 
 .selected-table-row {
-	border-bottom: 1px solid #c1e0d8;
-	background-color: #daf5ee;
+  border-bottom: 1px solid #c1e0d8;
+  background-color: #daf5ee;
 }
 
 .selected-table-row:hover {
-	cursor: default;
-	background-color: #daf5ee;
+  cursor: default;
+  background-color: #daf5ee;
 }
 
 .cut-table-row {
-	border: 1px solid red;
-	color: red;
+  border: 1px solid red;
+  color: red;
 }
 
 .table-cell {
-	margin: auto;
-	font-size: 95%;
-	height: 5%;
+  margin: auto;
+  font-size: 95%;
+  height: 5%;
 
-	padding-top: 5px;
+  padding-top: 5px;
 }
 
 .table-cell:focus {
-	background-color: #e6fff9;
+  background-color: #e6fff9;
 }
 
 .cell-span {
-	margin: auto;
-	padding: 0.5%;
-	color: #818181;
+  margin: auto;
+  padding: 0.5%;
+  color: #818181;
 }
 
 .filename-cell {
-	width: 30%;
+  width: 30%;
 }
 
 .filename-text {
-	padding-left: 5px;
-	max-width: 90%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding-bottom: 5px;
+  padding-left: 5px;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 5px;
 }
 
 .filename-cell:hover {
-	position: relative;
-	z-index: 0;
+  position: relative;
+  z-index: 0;
 }
 
 .filename-text:hover {
-	overflow: visible;
-	position: relative;
-	z-index: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 0;
 }
 
 .date-cell {
-	width: 15%;
+  width: 15%;
 }
 
 .date {
-	font-size: 90%;
+  font-size: 90%;
 }
 
 .type-cell {
-	width: 10%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  width: 10%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .type {
-	font-size: 90%;
-	width: 15%;
+  font-size: 90%;
+  width: 15%;
 }
 
 .extension-cell {
-	width: 10%;
+  width: 10%;
 }
 
 .extension {
-	padding-left: 20%;
-	font-size: 90%;
-	width: 10%;
+  padding-left: 20%;
+  font-size: 90%;
+  width: 10%;
 }
 
 .size-cell {
-	text-align: right;
-	width: 10%;
+  text-align: right;
+  width: 10%;
 }
 
 .size {
-	padding-right: 20%;
-	text-align: right;
-	font-size: 90%;
-	width: 10%;
+  padding-right: 20%;
+  text-align: right;
+  font-size: 90%;
+  width: 10%;
 }
 
 .shared-cell {
-	text-align: center;
-	width: 10%;
+  text-align: center;
+  width: 10%;
 }
 
 .shared {
 }
 
 .filename {
-	color: #747373;
-	top: 100px;
-	margin: auto;
-	width: 40%;
-	transition: background-color 1s;
-	padding: 8px;
+  color: #747373;
+  top: 100px;
+  margin: auto;
+  width: 40%;
+  transition: background-color 1s;
+  padding: 8px;
 }
 
 .filename:hover {
-	cursor: pointer;
-	background-color: #e6f5ee;
-	color: #043820;
-	height: 100%;
-	box-shadow: 1px 1px 10px #c8dbd2;
-	z-index: 1;
+  cursor: pointer;
+  background-color: #e6f5ee;
+  color: #043820;
+  height: 100%;
+  box-shadow: 1px 1px 10px #c8dbd2;
+  z-index: 1;
 }
 
 .shared {
-	width: 0.5px;
-	padding: 1%;
+  width: 0.5px;
+  padding: 1%;
 }
 
 .th:hover {
-	cursor: pointer;
-	background-color: #e6fff9;
+  cursor: pointer;
+  background-color: #e6fff9;
 }
 
 .rename-input {
-	border-radius: 0;
-	border: 1px solid #b1d4c4;
+  border-radius: 0;
+  border: 1px solid #b1d4c4;
 }
 
 .rename-input:focus {
-	outline: none !important;
-	border-radius: 0;
-	border: 2px solid #90c5ae;
-	font-size: 95%;
+  outline: none !important;
+  border-radius: 0;
+  border: 2px solid #90c5ae;
+  font-size: 95%;
 }
 
 @media only screen and (max-width: 666px) {
-	.filename-cell {
-		width: 90%;
-		padding-top: 10px;
-	}
-	.t-body {
-		height: calc(100vh - 12rem);
-	}
+  .filename-cell {
+    width: 90%;
+    padding-top: 10px;
+  }
+  .t-body {
+    height: calc(100vh - 12rem);
+  }
 }
 
 @media only screen and (max-width: 900px) {
-	.rename-input {
-		width: 100px;
-	}
+  .rename-input {
+    width: 100px;
+  }
 }

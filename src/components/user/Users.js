@@ -14,7 +14,6 @@ const Users = () => {
   useEffect(() => {
     const search = new URLSearchParams(location.search).get("search");
     if (search != null) {
-      console.log(search);
       axios({
         method: "get",
         url:

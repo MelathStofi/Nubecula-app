@@ -48,6 +48,8 @@ const FileManager = (props) => {
     remove,
     removeAll,
     selectAll,
+    selectedFiles,
+    setSelectedFiles,
   } = useContext(FMContext);
   const { currentMenu, setOptionClicked } = useContext(ContextMenuContext);
 
@@ -68,7 +70,7 @@ const FileManager = (props) => {
           setUser(resp.data);
         }
       });
-    // load files
+    // load directory
     let id = new URLSearchParams(location.search).get("id");
     let search = new URLSearchParams(location.search).get("search");
     if (id == null) {
@@ -85,6 +87,7 @@ const FileManager = (props) => {
         }
       });
     }
+    // load files
     if (props.match.params.param === "trash-bin") {
       axios({
         method: "get",
@@ -101,7 +104,6 @@ const FileManager = (props) => {
         withCredentials: true,
       }).then((resp) => {
         if (resp) {
-          console.log(resp.data);
           setFiles(resp.data);
           setShowTrashBin(true);
           history.push({
