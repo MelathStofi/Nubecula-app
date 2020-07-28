@@ -10,7 +10,7 @@ import "./styles/FileManagerStyle.css";
 import FileManagerContainer from "../container/FileManagerContainer";
 import { FMContext } from "../../contexts/FMContext";
 import { ContextMenuContext } from "../../contexts/ContextMenuContext";
-import ToolBar from "../../toolbar/ToolBar";
+import ToolBar from "../toolbar/ToolBar";
 import SideBar from "../sidebar/SideBar";
 import { FilesContext } from "../../contexts/FilesContext";
 import { UserContext } from "../../contexts/UserContext";
@@ -21,6 +21,8 @@ const FileManager = (props) => {
   const {
     files,
     setFiles,
+    directory,
+    setDirectory,
     queries,
     setQueries,
     showTrashBin,
@@ -58,7 +60,7 @@ const FileManager = (props) => {
       withCredentials: true,
     })
       .catch((error) => {
-        console.log("no user signed in");
+        console.log("No user signed in");
         setLoading(false);
       })
       .then((resp) => {
@@ -69,7 +71,20 @@ const FileManager = (props) => {
     // load files
     let id = new URLSearchParams(location.search).get("id");
     let search = new URLSearchParams(location.search).get("search");
-    if (id == null) id = "";
+    if (id == null) {
+      setDirectory(null);
+      id = "";
+    } else {
+      axios({
+        method: "get",
+        url: process.env.REACT_APP_DIRECTORY_URL + "/" + id,
+        withCredentials: true,
+      }).then((resp) => {
+        if (resp) {
+          setDirectory(resp.data);
+        }
+      });
+    }
     if (props.match.params.param === "trash-bin") {
       axios({
         method: "get",
@@ -86,6 +101,7 @@ const FileManager = (props) => {
         withCredentials: true,
       }).then((resp) => {
         if (resp) {
+          console.log(resp.data);
           setFiles(resp.data);
           setShowTrashBin(true);
           history.push({
@@ -137,6 +153,7 @@ const FileManager = (props) => {
     props.match.params.param,
     queries,
     setCurrentFile,
+    setDirectory,
     setFiles,
     setLoading,
     setShowTrashBin,
@@ -327,7 +344,7 @@ const FileManager = (props) => {
               <Link to="/sign-in">{"Log in now!"}</Link>
             </p>
             <p>
-              If you have no account yet, then do not hesitate to make
+              If you have no account yet, then do not hesitate to create
               one!&nbsp;&nbsp;
               <Link to={{ pathname: "/sign-up", prevPath: location.pathname }}>
                 {"Make an account now!"}
@@ -346,6 +363,7 @@ const FileManager = (props) => {
               <ToolBar
                 user={user}
                 auth={true}
+                directory={directory}
                 showTrashBin={showTrashBin}
                 itemNum={files.length}
               />

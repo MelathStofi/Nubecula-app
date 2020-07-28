@@ -1,33 +1,33 @@
 .sidebar {
-  margin: 0;
-  height: 100%;
-  width: 13%;
-  position: fixed;
-  z-index: 0;
-  top: 4rem;
-  left: 0;
-  background-color: rgb(252, 252, 252);
-  box-shadow: 0 0 3px 0px #cccccc;
-  overflow-x: hidden;
-  padding-top: 20px;
-  padding-left: 20px;
+	margin: 0;
+	height: 100%;
+	width: 13%;
+	position: fixed;
+	z-index: 0;
+	top: 4rem;
+	left: 0;
+	background-color: rgb(252, 252, 252);
+	box-shadow: 0 0 3px 0px #cccccc;
+	overflow-x: hidden;
+	padding-top: 20px;
+	padding-left: 20px;
 }
 
 .sidebar-field {
-  cursor: pointer;
-  padding: 5% 8px 0px 8%;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
+	cursor: pointer;
+	padding: 5% 8px 20px 8%;
+	text-decoration: none;
+	font-size: 25px;
+	color: #818181;
+	display: block;
 }
 
 .sidebar-field:hover {
-  color: #b0aeae;
+	color: #b0aeae;
 }
 
 @media only screen and (max-width: 1280px) {
-  .sidebar {
-    display: none;
-  }
+	.sidebar {
+		display: none;
+	}
 }
