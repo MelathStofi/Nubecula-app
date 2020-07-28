@@ -277,6 +277,20 @@ export const FileManagerProvider = (props) => {
 		});
 	};
 
+	const downloadShared = (username) => {
+		const filename = currentFile.filename + '.' + currentFile.extension;
+		sendData(
+			'get',
+			process.env.REACT_APP_PUBLIC_BASE_URL +
+				'/' +
+				username +
+				'/' +
+				currentFile.id
+		).then((resp) => {
+			FileDownload(resp, filename);
+		});
+	};
+
 	return (
 		<FMContext.Provider
 			value={{
@@ -310,6 +324,7 @@ export const FileManagerProvider = (props) => {
 				isAddDir: isAddDir,
 				setIsAddDir: setIsAddDir,
 				download: download,
+				downloadShared: downloadShared,
 				showUpload: showUpload,
 				setShowUpload: setShowUpload,
 				setIndexOfSelected: setIndexOfSelected,

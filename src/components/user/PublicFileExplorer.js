@@ -24,7 +24,9 @@ const PublicFileExplorer = (props) => {
 	} = useContext(FilesContext);
 	const { currentMenu, setOptionClicked } = useContext(ContextMenuContext);
 	const location = useLocation();
-	const { openPublicFile, currentFile, copy, download } = useContext(FMContext);
+	const { openPublicFile, currentFile, copy, downloadShared } = useContext(
+		FMContext
+	);
 	const history = useHistory();
 
 	useEffect(() => {
@@ -118,7 +120,7 @@ const PublicFileExplorer = (props) => {
 					id: 'c-m-open',
 					onClick: () => {
 						setOptionClicked(true);
-						download();
+						downloadShared(viewedUser.username);
 					},
 				});
 			}

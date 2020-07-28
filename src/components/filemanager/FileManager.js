@@ -344,7 +344,7 @@ const FileManager = (props) => {
 							<Link to="/sign-in">{'Log in now!'}</Link>
 						</p>
 						<p>
-							If you have no account yet, then do not hesitate to make
+							If you have no account yet, then do not hesitate to create
 							one!&nbsp;&nbsp;
 							<Link to={{ pathname: '/sign-up', prevPath: location.pathname }}>
 								{'Make an account now!'}
