@@ -4,7 +4,7 @@ import axios from "axios";
 import { useLocation, useHistory } from "react-router-dom";
 import FileList from "../filemanager/FileList";
 import { FilesContext } from "../../contexts/FilesContext";
-import ToolBar from "../../toolbar/ToolBar";
+import ToolBar from "../toolbar/ToolBar";
 import FileManagerContainer from "../container/FileManagerContainer";
 import { ContextMenuContext } from "../../contexts/ContextMenuContext";
 import { FMContext } from "../../contexts/FMContext";
@@ -14,10 +14,19 @@ const PublicFileExplorer = (props) => {
   const { loading, setLoading } = useLoading();
   const [viewedUser, setViewedUser] = useState(null);
   const { user } = useContext(UserContext);
-  const { files, setFiles, queries, setQueries } = useContext(FilesContext);
+  const {
+    files,
+    setFiles,
+    directory,
+    setDirectory,
+    queries,
+    setQueries,
+  } = useContext(FilesContext);
   const { currentMenu, setOptionClicked } = useContext(ContextMenuContext);
   const location = useLocation();
-  const { openPublicFile, currentFile, copy, download } = useContext(FMContext);
+  const { openPublicFile, currentFile, copy, downloadShared } = useContext(
+    FMContext
+  );
   const history = useHistory();
 
   useEffect(() => {
@@ -39,7 +48,25 @@ const PublicFileExplorer = (props) => {
 
     // load user's files
     let id = new URLSearchParams(location.search).get("id");
-    if (id == null) id = "";
+    if (id == null) {
+      setDirectory(null);
+      id = "";
+    } else {
+      axios({
+        method: "get",
+        url:
+          process.env.REACT_APP_PUBLIC_BASE_URL +
+          "/" +
+          props.match.params.username +
+          "/directories/directory/" +
+          id,
+        withCredentials: true,
+      }).then((resp) => {
+        if (resp) {
+          setDirectory(resp.data);
+        }
+      });
+    }
     axios({
       method: "get",
       url:
@@ -72,6 +99,7 @@ const PublicFileExplorer = (props) => {
     props.match.params.username,
     queries,
     history,
+    setDirectory,
   ]);
 
   const giveContextMenu = () => {
@@ -92,7 +120,7 @@ const PublicFileExplorer = (props) => {
           id: "c-m-open",
           onClick: () => {
             setOptionClicked(true);
-            download();
+            downloadShared(viewedUser.username);
           },
         });
       }
@@ -118,7 +146,7 @@ const PublicFileExplorer = (props) => {
       id="file-manager-operations"
       menuItems={giveContextMenu()}
     >
-      <ToolBar user={viewedUser} />
+      <ToolBar user={viewedUser} auth={false} directory={directory} />
       <FileList
         files={files}
         pathWithKeyId={

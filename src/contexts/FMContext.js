@@ -128,7 +128,7 @@ export const FileManagerProvider = (props) => {
           let newArray = files.concat(resp);
           setSelectedFiles(resp);
           setFiles(newArray);
-        } else {
+        } else if (isCut) {
           let filesClone = files.slice();
           for (let rmfile of clipboard) {
             filesClone = filesClone.filter((file) => rmfile.id !== file.id);
@@ -196,7 +196,6 @@ export const FileManagerProvider = (props) => {
     let filesClone = files.slice();
     for (let deletedFile of deletedFiles) {
       filesClone = filesClone.filter((file) => deletedFile.id !== file.id);
-      console.log(deletedFile);
     }
     setFiles(filesClone);
     removeFromDB(deletedFiles);
@@ -277,6 +276,20 @@ export const FileManagerProvider = (props) => {
     });
   };
 
+  const downloadShared = (username) => {
+    const filename = currentFile.filename + "." + currentFile.extension;
+    sendData(
+      "get",
+      process.env.REACT_APP_PUBLIC_BASE_URL +
+        "/" +
+        username +
+        "/" +
+        currentFile.id
+    ).then((resp) => {
+      FileDownload(resp, filename);
+    });
+  };
+
   return (
     <FMContext.Provider
       value={{
@@ -310,6 +323,7 @@ export const FileManagerProvider = (props) => {
         isAddDir: isAddDir,
         setIsAddDir: setIsAddDir,
         download: download,
+        downloadShared: downloadShared,
         showUpload: showUpload,
         setShowUpload: setShowUpload,
         setIndexOfSelected: setIndexOfSelected,

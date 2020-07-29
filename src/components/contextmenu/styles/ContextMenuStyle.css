@@ -19,6 +19,7 @@
 }
 
 .context-menu .context-menu__item {
+  color: rgb(121, 120, 120);
   padding: 4px 30px;
 }
 
