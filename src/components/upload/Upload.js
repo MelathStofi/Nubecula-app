@@ -5,6 +5,7 @@ import "./styles/UploadStyle.css";
 import { FMContext } from "../../contexts/FMContext";
 import { useLocation } from "react-router-dom";
 import { FilesContext } from "../../contexts/FilesContext";
+import { UserContext } from "../../contexts/UserContext";
 
 const Upload = (props) => {
   var respFiles = [];
@@ -14,6 +15,7 @@ const Upload = (props) => {
   const [uploadProgress, setUploadProgress] = useState({});
   const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
   const { setShowUpload } = useContext(FMContext);
+  const { loadCurrentUser } = useContext(UserContext);
   const location = useLocation();
 
   function onFilesAdded(files) {
@@ -32,8 +34,8 @@ const Upload = (props) => {
       setTimeout(() => {
         const newFiles = files.concat(respFiles);
         setFiles(newFiles);
+        loadCurrentUser();
       }, 2000);
-
       setSuccessfullyUploaded(true);
       setUploading(false);
     } catch (e) {
@@ -135,14 +137,29 @@ const Upload = (props) => {
     }
   };
 
+  const getSizeOfFiles = () => {
+    let size = 0;
+    const filesClone = uploadedFiles.slice();
+    for (let file of filesClone) {
+      size += file.size;
+    }
+    if (size >= 1000) {
+      if (size >= 1000000) {
+        if (size >= 1000000000) {
+          return <div>{(Math.round(size) / 1000000000).toFixed(2)} GB</div>;
+        }
+        return <div>{(Math.round(size) / 1000000).toFixed(2)} MB</div>;
+      }
+      return <div>{(Math.round(size) / 1000).toFixed(0)} KB</div>;
+    }
+    return <div>{size} B</div>;
+  };
+
   return (
     <div className="upload-card">
       <div className="Upload">
         <div className="Upload-header">
           <span className="Title">Upload Files</span>
-          <span className="Close" onClick={() => setShowUpload(false)}>
-            X
-          </span>
         </div>
         <div className="Content">
           <div>
@@ -162,8 +179,13 @@ const Upload = (props) => {
             })}
           </div>
         </div>
+
         <div className="Actions">{renderActions()}</div>
+        <div>{getSizeOfFiles()}</div>
       </div>
+      <span className="Close" onClick={() => setShowUpload(false)}>
+        X
+      </span>
     </div>
   );
 };

@@ -34,6 +34,8 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
   };
 
   const search = (searched) => {
+    // if (auth) history.push("/file-manager?search=" + searched);
+    // else history.push("/users/" + user.username + "?search=" + searched);
     if (auth) searchFilesAndSet(process.env.REACT_APP_BASE_URL, searched);
     else
       searchFilesAndSet(

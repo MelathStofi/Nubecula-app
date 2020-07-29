@@ -48,8 +48,6 @@ const FileManager = (props) => {
     remove,
     removeAll,
     selectAll,
-    selectedFiles,
-    setSelectedFiles,
   } = useContext(FMContext);
   const { currentMenu, setOptionClicked } = useContext(ContextMenuContext);
 
@@ -62,6 +60,7 @@ const FileManager = (props) => {
       withCredentials: true,
     })
       .catch((error) => {
+        console.clear();
         console.log("No user signed in");
         setLoading(false);
       })
