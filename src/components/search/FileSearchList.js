@@ -4,21 +4,37 @@ import FileImg from "../../resources/file.png";
 
 import "./styles/FileSearchStyle.css";
 import { ClickAwayListener } from "@material-ui/core";
-import { FilesContext } from "../../contexts/FilesContext";
 import { FMContext } from "../../contexts/FMContext";
+import { useHistory, useLocation } from "react-router-dom";
 
-const FileSearchList = ({ searchedFiles, setSearchedFiles, search }) => {
-  const { loadFiles } = useContext(FilesContext);
+const FileSearchList = ({ searchedFiles, setSearchedFiles, search, user }) => {
   const { setSelectedFiles } = useContext(FMContext);
+  const location = useLocation();
+  const history = useHistory();
 
   const handleClick = (file) => {
-    if (file.directory) loadFiles(file.url, file.id);
-    else {
-      loadFiles(
-        process.env.REACT_APP_BASE_URL + "/" + file.parentDirectoryId,
-        file.parentDirectoryId
-      );
-      setSelectedFiles([file]);
+    if (location.pathname === "/users/" + user.username) {
+      if (file.directory) {
+        history.push("/users/" + user.username + "?id=" + file.id);
+      } else {
+        history.push(
+          file.parentDirectoryId != null
+            ? "/users/" + user.username + "?id=" + file.parentDirectoryId
+            : "/users/" + user.username
+        );
+      }
+    } else {
+      if (file.directory) {
+        history.push("/file-manager?id=" + file.id);
+      } else {
+        history.push(
+          file.parentDirectoryId != null
+            ? "/file-manager?id=" + file.parentDirectoryId
+            : "/file-manager"
+        );
+
+        setSelectedFiles([file]);
+      }
     }
     setSearchedFiles([]);
   };

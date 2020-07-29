@@ -56,7 +56,6 @@ export const UserProvider = (props) => {
       .then((resp) => {
         if (resp) {
           setUser(resp.data);
-          console.log(resp.data);
         }
       });
   };

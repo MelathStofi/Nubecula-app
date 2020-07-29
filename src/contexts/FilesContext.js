@@ -6,6 +6,7 @@ export const FilesContext = createContext();
 
 export const FilesProvider = (props) => {
   const [files, setFiles] = useState([]);
+  const [directory, setDirectory] = useState([]);
   const [searchedFiles, setSearchedFiles] = useState([]);
   const [queries, setQueries] = useState([]);
   const [showTrashBin, setShowTrashBin] = useState(false);
@@ -69,19 +70,52 @@ export const FilesProvider = (props) => {
           pathname: "/file-manager/trash-bin",
         });
         setShowTrashBin(true);
-        console.log(resp.data);
       }
     });
   };
 
-  const searchFilesAndSet = async (url, searched) => {
+  const loadPrivateDirectory = (id = null) => {
+    axios({
+      method: "get",
+      url:
+        id == null
+          ? process.env.REACT_APP_DIRECTORY_URL
+          : process.env.REACT_APP_DIRECTORY_URL + "/" + id,
+      withCredentials: true,
+    }).then((resp) => {
+      if (resp) {
+        setDirectory(resp.data);
+      }
+    });
+  };
+
+  const loadPublicDirectory = (username, id) => {
+    axios({
+      method: "get",
+      url: process.env.REACT_APP_PUBLIC_BASE_URL + "/" + username + "/" + id,
+      withCredentials: true,
+    }).then((resp) => {
+      if (resp) {
+        setDirectory(resp.data);
+      }
+    });
+  };
+
+  const searchFilesAndSet = async (url, searched, username = null) => {
     if (searched !== "") {
       const resp = await getSearchedFiles(url, searched, "false");
       setFiles(resp);
-      history.push({
-        pathname: "/file-manager",
-        search: "?search=" + searched,
-      });
+      if (username == null) {
+        history.push({
+          pathname: "/file-manager",
+          search: "?search=" + searched,
+        });
+      } else {
+        history.push({
+          pathname: "/users/" + username,
+          search: "?search=" + searched,
+        });
+      }
     }
   };
 
@@ -100,6 +134,10 @@ export const FilesProvider = (props) => {
         files: files,
         setFiles: setFiles,
         loadFiles: loadFiles,
+        directory: directory,
+        setDirectory: setDirectory,
+        loadPrivateDirectory: loadPrivateDirectory,
+        loadPublicDirectory: loadPublicDirectory,
         searchFilesAndSet: searchFilesAndSet,
         getSearchedFiles: getSearchedFiles,
         searchedFiles: searchedFiles,
