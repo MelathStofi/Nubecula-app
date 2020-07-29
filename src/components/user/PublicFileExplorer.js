@@ -67,31 +67,50 @@ const PublicFileExplorer = (props) => {
         }
       });
     }
-    axios({
-      method: "get",
-      url:
-        Array.isArray(queries) && queries.length !== 0
-          ? process.env.REACT_APP_PUBLIC_BASE_URL +
-            "/" +
-            props.match.params.username +
-            "/" +
-            id +
-            "?sort=" +
-            queries[0] +
-            "&desc=" +
-            queries[1]
-          : process.env.REACT_APP_PUBLIC_BASE_URL +
-            "/" +
-            props.match.params.username +
-            "/" +
-            id,
-      withCredentials: true,
-    }).then((resp) => {
-      if (resp) {
-        setFiles(resp.data);
-        setLoading(false);
-      }
-    });
+    const search = new URLSearchParams(location.search).get("search");
+    if (search != null) {
+      axios({
+        method: "get",
+        url:
+          process.env.REACT_APP_PUBLIC_BASE_URL +
+          "/" +
+          props.match.params.username +
+          "?search=" +
+          search,
+        withCredentials: true,
+      }).then((resp) => {
+        if (resp) {
+          setFiles(resp.data);
+          setLoading(false);
+        }
+      });
+    } else {
+      axios({
+        method: "get",
+        url:
+          Array.isArray(queries) && queries.length !== 0
+            ? process.env.REACT_APP_PUBLIC_BASE_URL +
+              "/" +
+              props.match.params.username +
+              "/" +
+              id +
+              "?sort=" +
+              queries[0] +
+              "&desc=" +
+              queries[1]
+            : process.env.REACT_APP_PUBLIC_BASE_URL +
+              "/" +
+              props.match.params.username +
+              "/" +
+              id,
+        withCredentials: true,
+      }).then((resp) => {
+        if (resp) {
+          setFiles(resp.data);
+          setLoading(false);
+        }
+      });
+    }
   }, [
     location.search,
     setLoading,
