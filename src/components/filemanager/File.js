@@ -15,7 +15,8 @@ import { ContextMenuContext } from "../../contexts/ContextMenuContext";
 import { useHistory } from "react-router-dom";
 import FileView from "../fileview/FileView";
 
-const File = ({ file, pathWithKeyId, trashBin }) => {
+const File = ({ file, types, pathWithKeyId, trashBin }) => {
+  const type = file.type.substring(0, file.type.indexOf("/"));
   const [selected, setSelected] = useState(false);
   const [showFile, setShowFile] = useState(false);
   const { files, setFiles } = useContext(FilesContext);
@@ -80,19 +81,9 @@ const File = ({ file, pathWithKeyId, trashBin }) => {
   };
 
   const getIcon = () => {
-    const types = {
-      image: "image",
-      audio: "audio",
-      video: "video",
-      app: "application",
-      text: "text",
-    };
-    if (file.type.substring(0, types.audio.length) === types.audio)
-      return AudioImg;
-    else if (file.type.substring(0, types.video.length) === types.video)
-      return VideoImg;
-    else if (file.type.substring(0, types.image.length) === types.image)
-      return ImageImg;
+    if (type === types.audio) return AudioImg;
+    else if (type === types.video) return VideoImg;
+    else if (type === types.image) return ImageImg;
     else if (file.directory) return DirectoryImg;
     else return FileImg;
   };
@@ -207,7 +198,15 @@ const File = ({ file, pathWithKeyId, trashBin }) => {
           </span>
         </div>
       </div>
-      <FileView file={file} showFile={showFile} setShowFile={setShowFile} />
+      {Object.values(types).includes(type) ? (
+        <FileView
+          file={file}
+          types={types}
+          type={type}
+          showFile={showFile}
+          setShowFile={setShowFile}
+        />
+      ) : null}
     </div>
   );
 };
