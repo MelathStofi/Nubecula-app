@@ -1,0 +1,36 @@
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.file-view-card {
+  animation: fadein 0.6s;
+  position: absolute;
+  background-color: white;
+  z-index: 10;
+  top: 30%;
+  left: 35vw;
+  right: 35vw;
+  box-shadow: 1px 1px 30px 5px grey;
+  border-radius: 10px;
+  text-align: center;
+  margin: auto;
+  padding: 1rem;
+}
+
+.file-view-content {
+  width: 50%;
+  margin: auto;
+
+  padding: 2rem;
+}
+
+.file-view {
+  text-align: center;
+  width: 50%;
+  height: 50%;
+}

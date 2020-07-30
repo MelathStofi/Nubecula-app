@@ -124,13 +124,11 @@
 }
 
 .filename-cell:hover {
-  position: relative;
   z-index: 0;
 }
 
 .filename-text:hover {
   overflow: visible;
-  position: relative;
   z-index: 0;
 }
 
