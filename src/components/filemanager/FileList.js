@@ -7,6 +7,12 @@ import { FMContext } from "../../contexts/FMContext";
 import { ContextMenuContext } from "../../contexts/ContextMenuContext";
 
 const FileList = ({ files, pathWithKeyId, queries, setQueries, trashBin }) => {
+  const types = {
+    image: "image",
+    audio: "audio",
+    video: "video",
+    text: "text",
+  };
   const { setSelectedFiles, setIndexOfSelected } = useContext(FMContext);
   const { optionClicked, setOptionClicked } = useContext(ContextMenuContext);
 
@@ -80,6 +86,7 @@ const FileList = ({ files, pathWithKeyId, queries, setQueries, trashBin }) => {
               {files.map((file) => (
                 <File
                   file={file}
+                  types={types}
                   key={file.id}
                   pathWithKeyId={pathWithKeyId}
                   trashBin={trashBin}
