@@ -1,4 +1,40 @@
+This is the Nubecula application.
+This is a React application.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+Use:
+
+1. "npm i" - to install the necessary packages.
+2. create a .env file.
+  current .env file:
+    REACT_APP_DOMAIN_URI=http://localhost:8080
+
+    REACT_APP_SIGN_UP_URL=${REACT_APP_DOMAIN_URI}/auth/sign-up
+    REACT_APP_SIGN_IN_URL=${REACT_APP_DOMAIN_URI}/auth/sign-in
+    REACT_APP_SIGN_OUT_URL=${REACT_APP_DOMAIN_URI}/auth/sign-out
+    REACT_APP_VERIFY_USER_URL=${REACT_APP_DOMAIN_URI}/auth/verify
+
+    REACT_APP_CURRENT_USER_URL=${REACT_APP_DOMAIN_URI}/users/current
+    REACT_APP_CURRENT_USER_RENAME_URL=${REACT_APP_DOMAIN_URI}/users/rename
+    REACT_APP_CURRENT_USER_DELETE_URL=${REACT_APP_DOMAIN_URI}/users/delete
+    REACT_APP_USERS_URL=${REACT_APP_DOMAIN_URI}/users/
+
+    REACT_APP_BASE_URL=${REACT_APP_DOMAIN_URI}
+    REACT_APP_DIRECTORY_URL=${REACT_APP_DOMAIN_URI}/directories/directory
+    REACT_APP_DIRECTORIES_URL=${REACT_APP_DOMAIN_URI}/directories
+    REACT_APP_FILES_URL=${REACT_APP_DOMAIN_URI}/files
+
+    REACT_APP_SHARE_URL=${REACT_APP_DOMAIN_URI}/toggle-share
+    REACT_APP_REPLACE_URL=${REACT_APP_DOMAIN_URI}/replace
+    REACT_APP_COPY_URL=${REACT_APP_DOMAIN_URI}/copy
+
+    REACT_APP_PUBLIC_BASE_URL=${REACT_APP_DOMAIN_URI}/public
+
+    REACT_APP_TRASH_BIN_URL=${REACT_APP_DOMAIN_URI}/trash-bin
+    
+3. "npm start" - to start the application.
+
+The server needs to be running to use the application: https://github.com/MelathStofi/Nubecula-server
 
 ## Available Scripts
 
