@@ -7,6 +7,7 @@ Use:
 1. "npm i" - to install the necessary packages.
 2. create a .env file.
   current .env file:
+
     REACT_APP_DOMAIN_URI=http://localhost:8080
 
     REACT_APP_SIGN_UP_URL=${REACT_APP_DOMAIN_URI}/auth/sign-up
