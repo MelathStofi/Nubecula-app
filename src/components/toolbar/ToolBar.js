@@ -79,6 +79,7 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
           height="24"
           viewBox="0 0 24 24"
           width="24"
+          className="t-b-btn"
         >
           <path d="M0 0h24v24H0z" fill="none" />
           <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
@@ -87,6 +88,19 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
         {directory.filename}
       </React.Fragment>
     );
+  }
+
+  function getStorageText(size) {
+    if (size >= 1000) {
+      if (size >= 1000000) {
+        if (size >= 1000000000) {
+          return (Math.round(size) / 1000000000).toFixed(0) + "GB";
+        }
+        return (Math.round(size) / 1000000).toFixed(0) + "MB";
+      }
+      return (Math.round(size) / 1000).toFixed(0) + "KB";
+    }
+    return size + "B";
   }
 
   if (showTrashBin)
@@ -118,12 +132,38 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
             onClick={() => history.push(location.pathname)}
           >
             {user ? user.username : ""}
-            {directory //&& directory.type !== "root directory"
-              ? getCurrFolder()
-              : ""}
+            {directory ? getCurrFolder() : ""}
           </div>
           {auth ? (
-            <div>{user ? user.inStorage + " / " + user.storage : ""}</div>
+            <div className="t-b-storage">
+              {user
+                ? getStorageText(user.inStorage) +
+                  " / " +
+                  getStorageText(user.storage)
+                : ""}
+              <div className="instorage-chart">
+                <svg viewBox="0 0 36 36" className="circular-chart orange">
+                  <path
+                    className="circle-bg"
+                    d="M18 2.0845
+          a 15.9155 15.9155 0 0 1 0 31.831
+          a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path
+                    className="circle"
+                    strokeDasharray={
+                      (user.inStorage / user.storage) * 100 + ", 100"
+                    }
+                    d="M18 2.0845
+          a 15.9155 15.9155 0 0 1 0 31.831
+          a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <text x="18" y="20.35" className="percentage">
+                    {((user.inStorage / user.storage) * 100).toFixed(0)}%
+                  </text>
+                </svg>
+              </div>{" "}
+            </div>
           ) : null}
         </div>
       </div>
@@ -137,6 +177,7 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
                 fill="black"
                 width="19px"
                 height="25px"
+                className="t-b-btn"
               >
                 <path d="M0 0h24v24H0z" fill="none" />
                 <path d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z" />
@@ -158,6 +199,7 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
                     height="25"
                     viewBox="0 0 24 24"
                     width="25"
+                    className="t-b-btn"
                   >
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
@@ -176,6 +218,7 @@ const ToolBar = ({ user, auth, directory, showTrashBin, itemNum }) => {
                     fill="black"
                     width="25px"
                     height="25px"
+                    className="t-b-btn"
                   >
                     <path d="M0 0h24v24H0V0z" fill="none" />
                     <path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z" />
