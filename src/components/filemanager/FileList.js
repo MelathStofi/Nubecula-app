@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 
 import File from "./File";
 import ShowWindowDimensions from "../WindowDimension";
@@ -15,6 +15,31 @@ const FileList = ({ files, pathWithKeyId, queries, setQueries, trashBin }) => {
   };
   const { setSelectedFiles, setIndexOfSelected } = useContext(FMContext);
   const { optionClicked, setOptionClicked } = useContext(ContextMenuContext);
+  const { copy, cut, paste, moveToTrash, remove, selectAll } = useContext(
+    FMContext
+  );
+
+  const keydownHandler = useCallback(
+    (e) => {
+      if (e.keyCode === 65 && e.ctrlKey) {
+        e.preventDefault();
+        selectAll();
+      }
+      if (e.keyCode === 67 && e.ctrlKey) copy();
+      if (e.keyCode === 88 && e.ctrlKey) cut();
+      if (e.keyCode === 86 && e.ctrlKey) paste();
+      if (e.keyCode === 46) moveToTrash();
+      if (e.keyCode === 46 && e.shiftKey) remove();
+    },
+    [copy, cut, paste, moveToTrash, remove, selectAll]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", keydownHandler);
+    return () => {
+      document.removeEventListener("keydown", keydownHandler);
+    };
+  }, [keydownHandler]);
 
   const handleClickAway = () => {
     setIndexOfSelected(null);

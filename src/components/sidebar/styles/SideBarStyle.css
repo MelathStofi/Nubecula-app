@@ -33,6 +33,14 @@
   }
 }
 
+.s-b-icon {
+  fill: #818181;
+}
+
+.s-b-icon:hover {
+  fill: #b0aeae;
+}
+
 .folder-list {
   margin-left: 11%;
 }
